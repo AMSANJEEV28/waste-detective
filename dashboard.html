@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Waste Detective - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-bottom: 10px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #4CAF50; color: white; }
+    #status { font-weight: bold; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Welcome to Your Dashboard</h2>
+  <div id="userStatus">Loading user info...</div>
+  <div id="status">Loading progress...</div>
+
+  <h3>Progress per Category</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Uploaded</th>
+        <th>Target</th>
+      </tr>
+    </thead>
+    <tbody id="progressTable"></tbody>
+  </table>
+
+  <h3>Total Points: <span id="totalPoints">0</span></h3>
+  <h3>Total Images Uploaded: <span id="totalImages">0</span></h3>
+
+  <script type="module">
+    import {
+      auth, onAuthStateChanged, db, doc, getDoc
+    } from './firebase-config.js';
+
+    const userStatus = document.getElementById('userStatus');
+    const statusDiv = document.getElementById('status');
+    const progressTable = document.getElementById('progressTable');
+    const totalPointsEl = document.getElementById('totalPoints');
+    const totalImagesEl = document.getElementById('totalImages');
+
+    let currentUser = null;
+
+    async function loadDashboard() {
+      if (!currentUser) return;
+
+      statusDiv.textContent = "Loading your progress...";
+
+      try {
+        // Fetch user progress from the 'users' document
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          statusDiv.textContent = "No progress data found. Start uploading images!";
+          return;
+        }
+
+        const userData = userSnap.data();
+        const progress = userData.progress || {};
+        const categories = ["plastic","metal","glass","paper","cardboard","trash"];
+        progressTable.innerHTML = "";
+
+        let totalImages = 0;
+        categories.forEach(cat => {
+          const count = progress[cat] || 0;
+          totalImages += count;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${cat.charAt(0).toUpperCase() + cat.slice(1)}</td>
+                          <td>${count}</td>
+                          <td>5</td>`;
+          progressTable.appendChild(tr);
+        });
+
+        totalPointsEl.textContent = userData.totalPoints || 0;
+        totalImagesEl.textContent = totalImages;
+        statusDiv.textContent = "Progress loaded successfully!";
+      } catch (err) {
+        console.error(err);
+        statusDiv.textContent = "Error loading dashboard: " + err.message;
+      }
+    }
+
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      if (user) {
+        userStatus.textContent = `Signed in as ${user.displayName || user.email}`;
+        loadDashboard();
+      } else {
+        userStatus.textContent = "Not signed in. Please login from Home page.";
+        statusDiv.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Be a Waste Detective</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; text-align:center; }
+    button { padding: 10px 20px; font-size:16px; margin:5px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1>Be a Waste Detective – Segregate for a Better Future</h1>
+  <p>Upload waste images, earn points, and claim a certificate!</p>
+  <p>Rules: Upload clear images of waste, categorize correctly, 5 per category unlocks certificate.</p>
+
+  <div id="loginSection">
+    <button id="loginBtn">Login with Google</button>
+  </div>
+
+  <div id="profile" style="display:none;">
+    <h3>Welcome, <span id="username"></span></h3>
+    <p>Email: <span id="useremail"></span></p>
+    <p>Total Points: <span id="userpoints">0</span></p>
+    <button id="joinBtn">Join Now → Upload Page</button>
+    <br>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script type="module">
+    import {
+      auth, db, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+      doc, setDoc, getDoc, serverTimestamp
+    } from './firebase-config.js';
+
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const joinBtn = document.getElementById('joinBtn');
+    const profileDiv = document.getElementById('profile');
+
+    loginBtn.addEventListener('click', async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        const userRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) {
+          await setDoc(userRef, {
+            name: user.displayName || '',
+            email: user.email || '',
+            totalPoints: 0,
+            completed: false,
+            createdAt: serverTimestamp(),
+            progress: {
+              plastic: 0, metal: 0, glass: 0,
+              paper: 0, cardboard: 0, trash: 0
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        alert('Login failed: ' + err.message);
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await signOut(auth);
+    });
+
+    joinBtn.addEventListener('click', () => {
+      window.location.href = 'upload.html';
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        loginBtn.style.display = 'none';
+        profileDiv.style.display = 'block';
+        document.getElementById('username').textContent = user.displayName || 'User';
+        document.getElementById('useremail').textContent = user.email || '';
+
+        const userRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          document.getElementById('userpoints').textContent = snap.data().totalPoints || 0;
+        }
+      } else {
+        loginBtn.style.display = 'inline-block';
+        profileDiv.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

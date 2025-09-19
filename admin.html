@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Waste Detective - Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f0f8ff;
+    }
+    h1, h2 {
+      color: #2e8b57;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      border: none;
+      background-color: #2e8b57;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #3cb371;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+
+  <p>Total Participants: <span id="totalParticipants">0</span></p>
+
+  <h2>Uploads per Category</h2>
+  <ul>
+    <li>Plastic: <span id="PlasticCount">0</span></li>
+    <li>Metal: <span id="MetalCount">0</span></li>
+    <li>Glass: <span id="GlassCount">0</span></li>
+    <li>Paper: <span id="PaperCount">0</span></li>
+    <li>Cardboard: <span id="CardboardCount">0</span></li>
+    <li>Trash: <span id="TrashCount">0</span></li>
+  </ul>
+
+  <button id="exportCSV">Export CSV</button>
+  <button id="exportJSON">Export JSON</button>
+
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Admin JS -->
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 // firebase-config.js
-// Save this in your project root
-// Using Firebase SDK v12
+// Using Firebase modular SDK (v9+ style imports)
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
@@ -10,8 +9,7 @@ import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serve
 import { getStorage, ref, uploadBytes, getDownloadURL } 
   from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
-// Your Firebase configuration
-// firebase-config.js
+// ✅ Use values injected from env.js
 const firebaseConfig = {
   apiKey: window._env_.FIREBASE_API_KEY,
   authDomain: window._env_.FIREBASE_AUTH_DOMAIN,
@@ -22,16 +20,15 @@ const firebaseConfig = {
   measurementId: window._env_.FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// ✅ Initialize app properly
+const app = initializeApp(firebaseConfig);
 
-
-// Initialize Firebase services
+// ✅ Initialize services
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Export for other pages
+// ✅ Export everything you need
 export {
   app,
   auth,

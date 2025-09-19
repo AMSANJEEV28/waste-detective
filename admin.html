@@ -3,55 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Waste Detective - Admin Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-      background-color: #f0f8ff;
-    }
-    h1, h2 {
-      color: #2e8b57;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      margin: 5px 0;
-      font-weight: bold;
-    }
-    button {
-      padding: 10px 15px;
-      margin: 10px 5px;
-      border: none;
-      background-color: #2e8b57;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #3cb371;
-    }
-  </style>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Admin Dashboard</h1>
+  <nav class="admin-navbar">
+    <div class="nav-logo">Waste Detective Admin</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload Page</a></li>
+      <li><a href="certificate.html">Certificates</a></li>
+      <li><a href="dashboard.html">User Dashboard</a></li>
+    </ul>
+  </nav>
 
-  <p>Total Participants: <span id="totalParticipants">0</span></p>
+  <main class="admin-main">
+    <h1>Admin Dashboard</h1>
 
-  <h2>Uploads per Category</h2>
-  <ul>
-    <li>Plastic: <span id="PlasticCount">0</span></li>
-    <li>Metal: <span id="MetalCount">0</span></li>
-    <li>Glass: <span id="GlassCount">0</span></li>
-    <li>Paper: <span id="PaperCount">0</span></li>
-    <li>Cardboard: <span id="CardboardCount">0</span></li>
-    <li>Trash: <span id="TrashCount">0</span></li>
-  </ul>
+    <div class="stats-card">
+      <h2>Total Participants</h2>
+      <p id="totalParticipants">0</p>
+    </div>
 
-  <button id="exportCSV">Export CSV</button>
-  <button id="exportJSON">Export JSON</button>
+    <div class="stats-card">
+      <h2>Uploads per Category</h2>
+      <ul>
+        <li>Plastic: <span id="PlasticCount">0</span></li>
+        <li>Metal: <span id="MetalCount">0</span></li>
+        <li>Glass: <span id="GlassCount">0</span></li>
+        <li>Paper: <span id="PaperCount">0</span></li>
+        <li>Cardboard: <span id="CardboardCount">0</span></li>
+        <li>Trash: <span id="TrashCount">0</span></li>
+      </ul>
+    </div>
+
+    <div class="buttons">
+      <button id="exportCSV">Export CSV</button>
+      <button id="exportJSON">Export JSON</button>
+    </div>
+  </main>
 
   <!-- Firebase scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>

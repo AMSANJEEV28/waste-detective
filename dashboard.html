@@ -3,16 +3,23 @@
 <head>
   <meta charset="utf-8">
   <title>Waste Detective - Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h2 { margin-bottom: 10px; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-    th { background-color: #4CAF50; color: white; }
-    #status { font-weight: bold; margin-bottom: 15px; }
-  </style>
+    <link rel="stylesheet" href="dashboard.css">
+
 </head>
 <body>
+      <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">Him Village EPrahari</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+
+  <div class="main-content">
   <h2>Welcome to Your Dashboard</h2>
   <div id="userStatus">Loading user info...</div>
   <div id="status">Loading progress...</div>
@@ -29,9 +36,9 @@
     <tbody id="progressTable"></tbody>
   </table>
 
-  <h3>Total Points: <span id="totalPoints">0</span></h3>
-  <h3>Total Images Uploaded: <span id="totalImages">0</span></h3>
-
+  <h3>Total Points: <span id="totalPoints">0</span> / 30</h3>
+  <h3>Total Images Uploaded: <span id="totalImages">0</span> / 30</h3>
+</div>
   <script type="module">
     import {
       auth, onAuthStateChanged, db, doc, getDoc

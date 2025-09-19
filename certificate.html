@@ -1,119 +1,34 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Waste Detective - Certificate</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
-    #status { font-weight: bold; margin-bottom: 15px; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    button:disabled { cursor: not-allowed; background-color: #ccc; }
-  </style>
-</head>
-<body>
-  <h2>Waste Detective Certificate</h2>
-  <div id="userStatus">Loading user info...</div>
-  <div id="status">Checking eligibility for certificate...</div>
-  <button id="certBtn" disabled>Upload at least 5 images per category to unlock certificate</button>
-
-  <script type="module">
-    import { auth, onAuthStateChanged, db, doc, getDoc } from './firebase-config.js';
-    const userStatus = document.getElementById('userStatus');
-    const statusDiv = document.getElementById('status');
-    const certBtn = document.getElementById('certBtn');
-
-    let currentUser = null;
-
-    async function checkEligibility() {
-      if (!currentUser) return;
-
-      const userRef = doc(db, 'users', currentUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        const progress = userData.progress || {};
-        const categories = ['plastic', 'metal', 'glass', 'paper', 'cardboard', 'trash'];
-
-        // Check 5 images per category
-        let eligible = categories.every(cat => (progress[cat] || 0) >= 5);
-
-        if (eligible) {
-          certBtn.disabled = false;
-          certBtn.textContent = "Download Certificate";
-          statusDiv.textContent = "Congratulations! You have uploaded at least 5 images in each category.";
-        } else {
-          certBtn.disabled = true;
-          certBtn.textContent = "Upload at least 5 images per category to unlock certificate";
-          statusDiv.textContent = "You need at least 5 images per category to unlock certificate.";
-        }
-      } else {
-        statusDiv.textContent = "User data not found. Upload at least one image first.";
-      }
-    }
-
-    function generateCertificate(name) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.setFontSize(22);
-      doc.text("Certificate of Participation", 105, 40, { align: "center" });
-      doc.setFontSize(16);
-      doc.text(`This is awarded to`, 105, 60, { align: "center" });
-      doc.setFontSize(20);
-      doc.text(name, 105, 75, { align: "center" });
-      doc.setFontSize(16);
-      doc.text(`for successfully participating in`, 105, 90, { align: "center" });
-      doc.setFontSize(18);
-      doc.text("Be a Waste Detective – Segregate for a Better Future", 105, 105, { align: "center" });
-      doc.setFontSize(14);
-      const today = new Date().toLocaleDateString();
-      doc.text(`Date: ${today}`, 105, 125, { align: "center" });
-
-      doc.save(`WasteDetective_Certificate_${name}.pdf`);
-    }
-
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (user) {
-        userStatus.textContent = `Signed in as ${user.displayName || user.email}`;
-        checkEligibility();
-      } else {
-        userStatus.textContent = "Not signed in. Please login from Home page.";
-        statusDiv.textContent = "";
-      }
-    });
-
-    certBtn.addEventListener('click', async () => {
-      if (!currentUser) return alert("Please login first.");
-      const name = currentUser.displayName || currentUser.email || "Participant";
-      generateCertificate(name);
-    });
-  </script>
-</body>
-</html> -->
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <title>Waste Detective - Certificate</title>
+    <link rel="stylesheet" href="certificate.css">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; background: #f7f7f7; }
-    #status, #userStatus { font-weight: bold; margin-bottom: 15px; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    button:disabled { cursor: not-allowed; background-color: #ccc; }
-  </style>
 </head>
 <body>
+      <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">Him Village EPrahari</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+
+  <div class="main-content">
+
   <h2>Waste Detective Certificate</h2>
   <div id="userStatus">Loading user info...</div>
   <div id="status">Checking eligibility for certificate...</div>
   <button id="certBtn" disabled>Upload at least 5 images per category to unlock certificate</button>
+
+
+  </div>
 
   <script type="module">
     import { auth, onAuthStateChanged, db, doc, getDoc } from './firebase-config.js';

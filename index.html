@@ -5,28 +5,39 @@
   <title>Be a Waste Detective</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; text-align:center; }
-    button { padding: 10px 20px; font-size:16px; margin:5px; cursor:pointer; }
-  </style>
 </head>
 <body>
-  <h1>Be a Waste Detective – Segregate for a Better Future</h1>
-  <p>Upload waste images, earn points, and claim a certificate!</p>
-  <p>Rules: Upload clear images of waste, categorize correctly, 5 per category unlocks certificate.</p>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">Him Village EPrahari</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
 
-  <div id="loginSection">
-    <button id="loginBtn">Login with Google</button>
-  </div>
+  <main class="main-content">
+    <section class="hero-section">
+      <h1>Be a Waste Detective – Segregate for a Better Future</h1>
+      <p>Upload waste images, earn points, and claim a certificate!</p>
+      <p>Rules: Upload clear images of waste, categorize correctly, 5 per category unlocks certificate.</p>
 
-  <div id="profile" style="display:none;">
-    <h3>Welcome, <span id="username"></span></h3>
-    <p>Email: <span id="useremail"></span></p>
-    <p>Total Points: <span id="userpoints">0</span></p>
-    <button id="joinBtn">Join Now → Upload Page</button>
-    <br>
-    <button id="logoutBtn">Logout</button>
-  </div>
+      <div id="loginSection">
+        <button id="loginBtn" class="hv-btn">Login with Google</button>
+      </div>
+
+      <div id="profile" style="display:none;">
+        <h3>Welcome, <span id="username"></span></h3>
+        <p>Email: <span id="useremail"></span></p>
+        <p>Total Points: <span id="userpoints">0</span> / 30</p>
+        <button id="joinBtn" class="hv-btn">Join Now → Upload Page</button>
+        <br><br>
+        <button id="logoutBtn" class="hv-btn">Logout</button>
+      </div>
+    </section>
+  </main>
 
   <script type="module">
     import {

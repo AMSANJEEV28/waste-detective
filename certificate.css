@@ -1,0 +1,113 @@
+/* Global */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7f6;
+  color: #1b5e20;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2e7d32;
+  padding: 0.5rem 2rem;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+}
+
+.nav-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.nav-links li a:hover {
+  background: #1b5e20;
+}
+
+/* Hero Section */
+.main-content {
+  min-height: 80vh;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Heading */
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* Status Text */
+#userStatus, #status {
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: #1b5e20;
+}
+
+/* Button Styling */
+button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #2e7d32;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover:enabled {
+    background-color: #1b5e20;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: #a5d6a7;
+    color: #ffffffcc;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    #userStatus, #status {
+        font-size: 1rem;
+    }
+}

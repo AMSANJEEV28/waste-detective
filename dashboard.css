@@ -1,0 +1,135 @@
+/* Global */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7f6;
+  color: #1b5e20;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2e7d32;
+  padding: 0.5rem 2rem;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+}
+
+.nav-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.nav-links li a:hover {
+  background: #1b5e20;
+}
+
+/* Headings */
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+/* Status messages */
+#userStatus, #status {
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: #1b5e20;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+thead {
+    background-color: #2e7d32;
+    color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f1fdf1;
+}
+
+tbody tr:hover {
+    background-color: #dcedc8;
+}
+
+/* Highlight Total Points and Total Images */
+#totalPoints, #totalImages {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1b5e20;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    th, td {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+
+    #userStatus, #status {
+        font-size: 1rem;
+    }
+}
+
+
+.main-content {
+  min-height: 80vh;
+  padding: 2rem;
+}

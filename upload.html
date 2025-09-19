@@ -3,14 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <title>Upload Waste Image</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    #status { margin-top: 15px; font-weight: bold; }
-    progress { width: 100%; }
-    #progressDisplay { margin-top: 10px; font-weight: normal; }
-  </style>
+    <link rel="stylesheet" href="upload.css">
+
 </head>
 <body>
+      <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">Him Village EPrahari</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+
+  <div class="main-content">
   <h2>Upload an Image</h2>
 
   <div id="userStatus">Please login from Home page</div>
@@ -39,6 +48,9 @@
   <h3>Your Progress:</h3>
   <div id="progressDisplay">Loading...</div>
 
+
+  </div>
+
   <script type="module">
     import {
       auth, onAuthStateChanged, db, collection, addDoc, serverTimestamp,
@@ -55,7 +67,7 @@
 
     let currentUser = null;
 
-    // Update progress display function
+    // Update progress display
     async function updateProgressDisplay() {
       if (!currentUser) return;
       const userRef = doc(db, 'users', currentUser.uid);
@@ -89,7 +101,7 @@
       }
     });
 
-    // Resize/compress image before uploading
+    // Resize/compress image
     function resizeImage(file, maxWidth = 512, maxHeight = 512, quality = 0.8) {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -122,14 +134,15 @@
       });
     }
 
-    // Upload to Cloudinary
-    async function uploadToCloudinary(fileBlob) {
-      const cloudName = "daqjpvbh6";  // Replace with your Cloudinary cloud name
-      const uploadPreset = "waste_upload";  // Unsigned preset name
+    // Upload to Cloudinary with folder support
+    async function uploadToCloudinary(fileBlob, category) {
+      const cloudName = "daqjpvbh6";        // Your Cloudinary cloud name
+      const uploadPreset = "waste_upload";  // Unsigned preset
 
       const formData = new FormData();
       formData.append("file", fileBlob);
       formData.append("upload_preset", uploadPreset);
+      formData.append("folder", category.toLowerCase());  // Save in folder based on category
 
       progressBar.style.display = 'block';
       progressBar.value = 0;
@@ -146,7 +159,6 @@
         };
         xhr.onload = () => {
           const data = JSON.parse(xhr.responseText);
-          console.log("Cloudinary response:", data);
           if (data.secure_url) {
             resolve(data.secure_url);
           } else {
@@ -158,6 +170,7 @@
       });
     }
 
+    // Upload button click
     uploadBtn.addEventListener('click', async () => {
       if (!currentUser) return alert('Please login first (go to Home).');
 
@@ -169,10 +182,8 @@
       try {
         statusDiv.textContent = 'Resizing image...';
         const compressedBlob = await resizeImage(file, 512, 512, 0.8);
-        console.log("File blob:", compressedBlob);
 
-        const imageURL = await uploadToCloudinary(compressedBlob);
-        console.log("Uploaded URL:", imageURL);
+        const imageURL = await uploadToCloudinary(compressedBlob, category);
 
         // Save in Firestore
         await addDoc(collection(db, 'uploads'), {
@@ -193,7 +204,7 @@
         statusDiv.textContent = 'Upload successful!';
         fileInput.value = '';
         progressBar.style.display = 'none';
-        await updateProgressDisplay(); // Refresh progress after upload
+        await updateProgressDisplay();
       } catch (err) {
         console.error(err);
         statusDiv.textContent = 'Error: ' + err.message;

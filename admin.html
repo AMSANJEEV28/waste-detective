@@ -1,3 +1,58 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Waste Detective - Admin Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="admin-navbar">
+    <div class="nav-logo">Waste Detective Admin</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="upload.html">Upload Page</a></li>
+      <li><a href="certificate.html">Certificates</a></li>
+      <li><a href="dashboard.html">User Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main class="admin-main">
+    <h1>Admin Dashboard</h1>
+
+    <div class="stats-card">
+      <h2>Total Participants</h2>
+      <p id="totalParticipants">0</p>
+    </div>
+
+    <div class="stats-card">
+      <h2>Uploads per Category</h2>
+      <ul>
+        <li>Plastic: <span id="PlasticCount">0</span></li>
+        <li>Metal: <span id="MetalCount">0</span></li>
+        <li>Glass: <span id="GlassCount">0</span></li>
+        <li>Paper: <span id="PaperCount">0</span></li>
+        <li>Cardboard: <span id="CardboardCount">0</span></li>
+        <li>Trash: <span id="TrashCount">0</span></li>
+      </ul>
+    </div>
+
+    <div class="buttons">
+      <button id="exportCSV">Export CSV</button>
+      <button id="exportJSON">Export JSON</button>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="admin.js"></script>
+</body>
+</html> -->
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,12 +98,49 @@
     </div>
   </main>
 
-  <!-- Firebase scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Modular Firebase -->
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-  <!-- Admin JS -->
-  <script src="admin.js"></script>
+    async function loadStats() {
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        document.getElementById("totalParticipants").textContent = usersSnapshot.size;
+
+        // reset counters
+        const counts = { Plastic:0, Metal:0, Glass:0, Paper:0, Cardboard:0, Trash:0 };
+
+        usersSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.progress) {
+            counts.Plastic += data.progress.plastic || 0;
+            counts.Metal += data.progress.metal || 0;
+            counts.Glass += data.progress.glass || 0;
+            counts.Paper += data.progress.paper || 0;
+            counts.Cardboard += data.progress.cardboard || 0;
+            counts.Trash += data.progress.trash || 0;
+          }
+        });
+
+        // update DOM
+        for (const key in counts) {
+          document.getElementById(key + "Count").textContent = counts[key];
+        }
+      } catch (err) {
+        console.error("Error loading stats:", err);
+      }
+    }
+
+    document.getElementById("exportCSV").addEventListener("click", () => {
+      alert("CSV export coming soon!");
+    });
+
+    document.getElementById("exportJSON").addEventListener("click", () => {
+      alert("JSON export coming soon!");
+    });
+
+    loadStats();
+  </script>
 </body>
 </html>

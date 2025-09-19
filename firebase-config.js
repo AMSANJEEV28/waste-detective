@@ -1,5 +1,5 @@
 // firebase-config.js
-// Using Firebase modular SDK (v9+ style imports)
+// Firebase modular SDK (v9+ style imports)
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
@@ -9,26 +9,24 @@ import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serve
 import { getStorage, ref, uploadBytes, getDownloadURL } 
   from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
-// ✅ Use values injected from env.js
+// ✅ Environment variables injected by Netlify
 const firebaseConfig = {
-  apiKey: window._env_.FIREBASE_API_KEY,
-  authDomain: window._env_.FIREBASE_AUTH_DOMAIN,
-  projectId: window._env_.FIREBASE_PROJECT_ID,
-  storageBucket: window._env_.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: window._env_.FIREBASE_MESSAGING_SENDER_ID,
-  appId: window._env_.FIREBASE_APP_ID,
-  measurementId: window._env_.FIREBASE_MEASUREMENT_ID
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// ✅ Initialize app properly
+// Initialize Firebase
+console.log("Initializing Firebase with config:", firebaseConfig);
 const app = initializeApp(firebaseConfig);
-
-// ✅ Initialize services
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// ✅ Export everything you need
 export {
   app,
   auth,

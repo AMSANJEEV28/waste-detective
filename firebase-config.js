@@ -11,18 +11,20 @@ import { getStorage, ref, uploadBytes, getDownloadURL }
   from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 // Your Firebase configuration
+// firebase-config.js
 const firebaseConfig = {
-  apiKey: "AIzaSyAR42iwcRLkywkiu83Oix7S5z_YxBq5rgc",
-  authDomain: "waste-detective-7214b.firebaseapp.com",
-  projectId: "waste-detective-7214b",
-  storageBucket: "waste-detective-7214b.appspot.com",
-  messagingSenderId: "1047902917063",
-  appId: "1:1047902917063:web:59257f2f5156fea58a89e2",
-  measurementId: "G-RM5VFX0XMQ"
+  apiKey: window._env_.FIREBASE_API_KEY,
+  authDomain: window._env_.FIREBASE_AUTH_DOMAIN,
+  projectId: window._env_.FIREBASE_PROJECT_ID,
+  storageBucket: window._env_.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: window._env_.FIREBASE_MESSAGING_SENDER_ID,
+  appId: window._env_.FIREBASE_APP_ID,
+  measurementId: window._env_.FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+
 
 // Initialize Firebase services
 const auth = getAuth(app);

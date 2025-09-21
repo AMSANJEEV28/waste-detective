@@ -1,3 +1,5 @@
+import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

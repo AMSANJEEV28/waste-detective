@@ -68,6 +68,10 @@ import {
   doc, updateDoc, increment, getDoc
 } from './firebase-config.js';
 
+
+import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
+
+
 const userStatus = document.getElementById('userStatus');
 const uploadBtn = document.getElementById('uploadBtn');
 const inputContainer = document.getElementById('inputContainer');

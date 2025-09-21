@@ -1,19 +1,19 @@
-# # Node modules
-# node_modules/
+# Node modules
+node_modules/
 
-# # Build output
-# dist/
-# build/
+# Build output
+dist/
+build/
 
-# # Environment files
-# .env
-# .env.local
-# .env.*.local
+# Environment files
+.env
+.env.local
+.env.*.local
 
-# # Firebase env.js (if you ever generate manually)
-# env.js
+# Firebase env.js (if you ever generate manually)
+env.js
 
-# # Optional: OS or editor files
-# .DS_Store
-# *.log
-# .vscode/
+# Optional: OS or editor files
+.DS_Store
+*.log
+.vscode/

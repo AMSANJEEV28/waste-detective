@@ -11,13 +11,13 @@ import { getStorage, ref, uploadBytes, getDownloadURL }
 
 // ✅ Environment variables injected by Netlify
 const firebaseConfig = {
-  apiKey: window._env_.FIREBASE_API_KEY,
-  authDomain: window._env_.FIREBASE_AUTH_DOMAIN,
-  projectId: window._env_.FIREBASE_PROJECT_ID,
-  storageBucket: window._env_.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: window._env_.FIREBASE_MESSAGING_SENDER_ID,
-  appId: window._env_.FIREBASE_APP_ID,
-  measurementId: window._env_.FIREBASE_MEASUREMENT_ID
+apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 console.log("Firebase config loaded:", firebaseConfig);
 

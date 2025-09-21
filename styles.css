@@ -24,31 +24,38 @@ body {
 /* =====================
    Navbar
 ===================== */
+/* =====================
+   Navbar Fix
+===================== */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--green);
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1rem; /* smaller side padding for small screens */
   color: var(--white);
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  width: 100vw;          /* ensure full viewport width */
+  max-width: 100%;       /* no max-width limitation */
+  box-sizing: border-box; 
+  flex-wrap: wrap;       /* allow items to wrap on very small screens */
 }
 
-.nav-logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+.nav-logo a {
+  display: inline-block;
+  white-space: nowrap; /* prevent breaking into multiple lines */
+  overflow: hidden;
+  text-overflow: ellipsis; /* if too long, cut with ... */
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.2rem;
-  margin: 0;
-  padding: 0;
+/* Optional: reduce logo font size slightly for very narrow screens */
+@media screen and (max-width: 400px) {
+  .nav-logo {
+    font-size: 1.3rem;
+  }
 }
 
 .nav-links li a {
@@ -178,4 +185,32 @@ body {
 a{
   text-decoration: none;
   color: inherit;
+}
+
+/* Optional: ensure navbar content wraps nicely on small screens */
+@media screen and (max-width: 450px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-logo {
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .nav-links li a {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
 }

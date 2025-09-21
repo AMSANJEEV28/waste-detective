@@ -26,6 +26,49 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* Make navbar full width on all devices */
+.navbar {
+  width: 100%;
+  box-sizing: border-box; /* ensures padding doesn't shrink width */
+  padding: 0.8rem 1rem;    /* adjust padding as needed */
+}
+
+/* Remove any default body margin/padding that affects full-width */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* Optional: ensure navbar content wraps nicely on small screens */
+@media screen and (max-width: 450px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-logo {
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .nav-links li a {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+}
+
+
 .nav-logo {
   font-size: 1.4rem;
   font-weight: bold;
@@ -200,3 +243,4 @@ tbody tr:hover {
     height: 16px;
   }
 }
+

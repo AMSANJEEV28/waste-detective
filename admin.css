@@ -158,3 +158,121 @@ button:hover {
     padding: 10px 0;
   }
 }
+
+
+
+
+/* =======================
+   Responsive Enhancements
+======================= */
+
+/* Tablets (portrait & small landscape) */
+@media screen and (max-width: 992px) {
+  .admin-main {
+    max-width: 100%;
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .admin-main h1 {
+    font-size: 1.8rem;
+  }
+
+  .admin-main h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Mobile landscape & large phones */
+@media screen and (max-width: 768px) {
+  .admin-navbar {
+    flex-wrap: wrap;
+    padding: 0.6rem 1rem;
+  }
+
+  .admin-navbar .nav-logo {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .admin-navbar .nav-links {
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+
+  .stats-card {
+    padding: 1rem;
+  }
+
+  .stats-card ul li {
+    font-size: 0.95rem;
+  }
+
+  button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .admin-navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-navbar .nav-links {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .admin-main {
+    margin: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  .admin-main h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-main h2 {
+    font-size: 1.2rem;
+  }
+
+  .stats-card {
+    padding: 0.8rem;
+    border-radius: 8px;
+  }
+
+  .stats-card ul li {
+    font-size: 0.9rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+}
+
+/* Ultra small devices (≤360px) */
+@media screen and (max-width: 360px) {
+  .admin-main h1 {
+    font-size: 1.3rem;
+  }
+
+  .admin-main h2 {
+    font-size: 1rem;
+  }
+
+  .stats-card ul li {
+    font-size: 0.85rem;
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+  }
+}

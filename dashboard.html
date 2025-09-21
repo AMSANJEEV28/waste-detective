@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8">
   <title>Waste Detective - Dashboard</title>
@@ -9,12 +9,9 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">
-      <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
-        Him Village EPrahari
-      </a>
-    </div>
-    <ul class="nav-links">
+    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+    Him Village EPrahari
+  </a></div>    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="certificate.html">Certificate</a></li>
@@ -22,53 +19,140 @@
   </nav>
 
   <div class="main-content">
-    <section class="hero-section">
-      <h2>Welcome to Your Dashboard</h2>
-      <div id="userStatus">Loading user info...</div>
-      <div id="status">Loading progress...</div>
 
-      <!-- Progress Bars -->
-      <div id="progressBars" style="width:100%; max-width:700px; margin: 20px auto; text-align:left;">
-        <div class="progress-container">
-          <span>Module Completion:</span>
-          <div class="progress-bar-bg">
-            <div id="moduleProgressBar" class="progress-bar-fill" style="width:0%"></div>
-          </div>
-        </div>
+        <section class="hero-section">
 
-        <div class="progress-container">
-          <span>Image Upload Completion:</span>
-          <div class="progress-bar-bg">
-            <div id="uploadProgressBar" class="progress-bar-fill" style="width:0%"></div>
-          </div>
-        </div>
+    <h2>Welcome to Your Dashboard</h2>
+    <div id="userStatus">Loading user info...</div>
+    <div id="status">Loading progress...</div>
 
-        <div class="progress-container">
-          <span>Total Points:</span>
-          <div class="progress-bar-bg">
-            <div id="pointsProgressBar" class="progress-bar-fill" style="width:0%"></div>
-          </div>
+    <!-- Progress Bars -->
+    <div id="progressBars" style="width:100%; max-width:700px; margin: 20px auto; text-align:left;">
+      <div class="progress-container">
+        <span>Module Completion:</span>
+        <div class="progress-bar-bg">
+          <div id="moduleProgressBar" class="progress-bar-fill" style="width:0%"></div>
         </div>
       </div>
 
-      <h3>Progress per Category</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Uploaded</th>
-            <th>Target</th>
-          </tr>
-        </thead>
-        <tbody id="progressTable"></tbody>
-      </table>
+      <div class="progress-container">
+        <span>Image Upload Completion:</span>
+        <div class="progress-bar-bg">
+          <div id="uploadProgressBar" class="progress-bar-fill" style="width:0%"></div>
+        </div>
+      </div>
 
-      <h3>Total Points: <span id="totalPoints">0</span> / 12</h3>
-      <h3>Total Images Uploaded: <span id="totalImages">0</span> / 12</h3>
-    </section>
+      <div class="progress-container">
+        <span>Total Points:</span>
+        <div class="progress-bar-bg">
+          <div id="pointsProgressBar" class="progress-bar-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Progress per Category</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Uploaded</th>
+          <th>Target</th>
+        </tr>
+      </thead>
+      <tbody id="progressTable"></tbody>
+    </table>
+
+    <h3>Total Points: <span id="totalPoints">0</span> / 12</h3>
+    <h3>Total Images Uploaded: <span id="totalImages">0</span> / 12</h3>
+
+        </section>
   </div>
 
-  <!-- Scripts -->
-  <script type="module" src="/dashboard.js"></script>
+<script src="env.js"></script>
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="index.js"></script>
+<script type="module">
+
+import {
+  auth,
+  db,
+  onAuthStateChanged,
+  doc,
+  getDoc,
+  GoogleAuthProvider,
+  signInWithPopup
+} from './firebase-config.js';
+
+
+  const userStatus = document.getElementById('userStatus');
+  const statusDiv = document.getElementById('status');
+  const progressTable = document.getElementById('progressTable');
+  const totalPointsEl = document.getElementById('totalPoints');
+  const totalImagesEl = document.getElementById('totalImages');
+
+  let currentUser = null;
+
+  async function loadDashboard() {
+    if (!currentUser) return;
+    statusDiv.textContent = "Loading your progress...";
+
+    try {
+      const userRef = doc(db, 'users', currentUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        statusDiv.textContent = "No progress data found. Start uploading images!";
+        return;
+      }
+
+      const userData = userSnap.data();
+      const progress = userData.progress || {};
+      const categories = ["plastic","metal","glass","paper","cardboard","trash"];
+      progressTable.innerHTML = "";
+
+      let totalImages = 0;
+      categories.forEach(cat => {
+        const count = progress[cat] || 0;
+        totalImages += count;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${cat.charAt(0).toUpperCase() + cat.slice(1)}</td>
+                        <td>${count}</td>
+                        <td>2</td>`;
+        progressTable.appendChild(tr);
+      });
+
+      // Update total points and images
+      totalPointsEl.textContent = userData.totalPoints || 0;
+      totalImagesEl.textContent = totalImages;
+
+      // Update progress bars
+      const moduleCompletion = userData.moduleCompleted ? 100 : 0; // module completion
+      const totalUploadsTarget = 12; // 6 categories * 2
+      const uploadCompletion = Math.min(Math.round((totalImages/totalUploadsTarget)*100),100);
+      const totalPointsTarget = 12;
+      const pointsCompletion = Math.min(Math.round((userData.totalPoints/totalPointsTarget)*100),100);
+
+      document.getElementById('moduleProgressBar').style.width = moduleCompletion + '%';
+      document.getElementById('uploadProgressBar').style.width = uploadCompletion + '%';
+      document.getElementById('pointsProgressBar').style.width = pointsCompletion + '%';
+
+      statusDiv.textContent = "Progress loaded successfully!";
+    } catch (err) {
+      console.error(err);
+      statusDiv.textContent = "Error loading dashboard: " + err.message;
+    }
+  }
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+    if (user) {
+      userStatus.textContent = `Signed in as ${user.displayName || user.email}`;
+      loadDashboard();
+    } else {
+      userStatus.textContent = "Not signed in. Please login from Home page.";
+      statusDiv.textContent = "";
+    }
+  });
+</script>
 </body>
 </html>

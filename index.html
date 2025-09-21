@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8" />
   <title>Be a Waste Detective</title>
@@ -9,11 +9,9 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">
-      <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
-        Him Village EPrahari
-      </a>
-    </div>
+    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+    Him Village EPrahari
+  </a></div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
@@ -32,7 +30,7 @@
       </div>
 
       <i>Please ensure that you log in with a Gmail account displaying your correct full name, 
-      as certificates will be generated using the name associated with your Gmail profile.</i>
+    as certificates will be generated using the name associated with your Gmail profile.</i>
 
       <div id="profile" style="display:none;">
         <h3>Welcome, <span id="username"></span></h3>
@@ -40,19 +38,21 @@
         <p>Module Progress: <span id="moduleProgress">0%</span></p>
         <p>Upload Assignment Progress: <span id="userpoints">0%</span></p>
 
+        <!-- Buttons updated for new flow -->
         <button id="learnModuleBtn" class="hv-btn">Start Learning Module</button>
         <button id="joinBtn" class="hv-btn">Go to Assignment → Capture Images</button>
         <br><br>
 
+        <!-- Logout button moved inside profile -->
         <button id="logoutBtn" class="hv-btn">Logout</button>
       </div>
+
     </section>
   </main>
 
   <!-- Scripts -->
-  <!-- Remove env.js -->
-  <!-- Only include Vite modules -->
-  <script type="module" src="/firebase-config.js"></script>
-  <script type="module" src="/index.js"></script>
+  <script src="env.js"></script>
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="index.js"></script>
 </body>
 </html>

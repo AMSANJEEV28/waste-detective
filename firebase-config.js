@@ -1,39 +1,39 @@
 // firebase-config.js
-// ✅ Firebase modular SDK (v9+), works with Vite + Netlify environment variables
+// Firebase modular SDK (v9+ style imports)
 
-// Make sure you installed Firebase in your project:
-// npm install firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
+  from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, increment } 
+  from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } 
+  from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, increment } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-// ✅ Load config from Netlify environment variables
+// ✅ Environment variables injected by Netlify
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: window._env_.FIREBASE_API_KEY,
+  authDomain: window._env_.FIREBASE_AUTH_DOMAIN,
+  projectId: window._env_.FIREBASE_PROJECT_ID,
+  storageBucket: window._env_.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: window._env_.FIREBASE_MESSAGING_SENDER_ID,
+  appId: window._env_.FIREBASE_APP_ID,
+  measurementId: window._env_.FIREBASE_MEASUREMENT_ID
 };
+console.log("Firebase config loaded:", firebaseConfig);
 
-// ✅ Initialize Firebase (only once)
+
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-const provider = new GoogleAuthProvider();
 
-// ✅ Export everything you might need
 export {
   app,
   auth,
-  provider,
   db,
   storage,
+  GoogleAuthProvider,
   signInWithPopup,
   signOut,
   onAuthStateChanged,

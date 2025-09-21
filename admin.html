@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Waste Detective - Admin Dashboard</title>
@@ -43,7 +43,77 @@
     </div>
   </main>
 
-  <!-- Scripts -->
-  <script type="module" src="admin.js"></script>
+  <script src="env.js"></script>
+<script type="module">
+import { auth, db, onAuthStateChanged } from './firebase-config.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+const adminMain = document.getElementById("adminMain");
+const totalParticipantsEl = document.getElementById("totalParticipants");
+const categoryCounts = {
+  Plastic: document.getElementById("PlasticCount"),
+  Metal: document.getElementById("MetalCount"),
+  Glass: document.getElementById("GlassCount"),
+  Paper: document.getElementById("PaperCount"),
+  Cardboard: document.getElementById("CardboardCount"),
+  Trash: document.getElementById("TrashCount")
+};
+
+const exportCSVBtn = document.getElementById("exportCSV");
+const exportJSONBtn = document.getElementById("exportJSON");
+
+const ADMIN_EMAILS = ["admin@himvillageprahari", "amsanjeev28@gmail.com"];
+
+async function loadStats() {
+  try {
+    const usersRef = collection(db, "users"); // ✅ collection reference
+    const usersSnapshot = await getDocs(usersRef); // ✅ getDocs from SDK, not firebase-config.js
+
+    totalParticipantsEl.textContent = usersSnapshot.size;
+
+    const counts = { Plastic:0, Metal:0, Glass:0, Paper:0, Cardboard:0, Trash:0 };
+
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.progress) {
+        counts.Plastic += data.progress.plastic || 0;
+        counts.Metal += data.progress.metal || 0;
+        counts.Glass += data.progress.glass || 0;
+        counts.Paper += data.progress.paper || 0;
+        counts.Cardboard += data.progress.cardboard || 0;
+        counts.Trash += data.progress.trash || 0;
+      }
+    });
+
+    for (const key in counts) {
+      categoryCounts[key].textContent = counts[key];
+    }
+
+  } catch (err) {
+    console.error("Error loading stats:", err);
+    alert("Failed to load admin stats. Check console for details.");
+  }
+}
+
+exportCSVBtn.addEventListener("click", () => alert("CSV export coming soon!"));
+exportJSONBtn.addEventListener("click", () => alert("JSON export coming soon!"));
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  if (!ADMIN_EMAILS.includes(user.email)) {
+    alert("Access Denied: You are not an admin.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  adminMain.style.display = "block";
+  loadStats();
+});
+</script>
+
 </body>
 </html>

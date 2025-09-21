@@ -1,98 +1,101 @@
-// admin.js
-import { auth, db, onAuthStateChanged } from './firebase-config.js';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-
-// Elements
-const adminMain = document.getElementById("adminMain");
-const totalParticipantsEl = document.getElementById("totalParticipants");
-const categoryCounts = {
-  Plastic: document.getElementById("PlasticCount"),
-  Metal: document.getElementById("MetalCount"),
-  Glass: document.getElementById("GlassCount"),
-  Paper: document.getElementById("PaperCount"),
-  Cardboard: document.getElementById("CardboardCount"),
-  Trash: document.getElementById("TrashCount")
+// ----- 1️⃣ Firebase Config -----
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MSG_ID",
+  appId: "YOUR_APP_ID"
 };
-const exportCSVBtn = document.getElementById("exportCSV");
-const exportJSONBtn = document.getElementById("exportJSON");
 
-// ✅ List of admin emails
-const ADMIN_EMAILS = ["admin@himvillageprahari.com", "amsanjeev28@gmail.com"];
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// ---------------------
-// LOAD STATS
-// ---------------------
-async function loadStats() {
+// ----- 2️⃣ Admin Emails -----
+const ADMIN_EMAILS = ["admin@himvillageprahari", "amsanjeev28@gmail.com"];
+
+// ----- 3️⃣ Auth Check -----
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    if (ADMIN_EMAILS.includes(user.email)) {
+      // User is admin, load dashboard
+      loadAdminDashboard();
+    } else {
+      alert("Access Denied: You are not an admin.");
+      window.location.href = "/"; // redirect to home
+    }
+  } else {
+    window.location.href = "/login"; // redirect to login
+  }
+});
+
+// ----- 4️⃣ Load Admin Dashboard -----
+async function loadAdminDashboard() {
   try {
-    const usersSnapshot = await getDocs(collection(db, "users"));
-    totalParticipantsEl.textContent = usersSnapshot.size;
+    // Total participants
+    const usersSnapshot = await db.collection("users").get();
+    document.getElementById("totalParticipants").innerText = usersSnapshot.size;
 
-    const counts = { Plastic:0, Metal:0, Glass:0, Paper:0, Cardboard:0, Trash:0 };
+    // Uploads per category
+    const uploadsSnapshot = await db.collection("uploads").get();
+    const categoryCounts = {
+      Plastic: 0,
+      Metal: 0,
+      Glass: 0,
+      Paper: 0,
+      Cardboard: 0,
+      Trash: 0
+    };
 
-    usersSnapshot.forEach(docSnap => {
-      const data = docSnap.data();
-      if (data.progress) {
-        counts.Plastic += data.progress.plastic || 0;
-        counts.Metal += data.progress.metal || 0;
-        counts.Glass += data.progress.glass || 0;
-        counts.Paper += data.progress.paper || 0;
-        counts.Cardboard += data.progress.cardboard || 0;
-        counts.Trash += data.progress.trash || 0;
+    uploadsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (categoryCounts[data.category] !== undefined) {
+        categoryCounts[data.category]++;
       }
     });
 
-    // Update DOM
-    for (const key in counts) {
-      categoryCounts[key].textContent = counts[key];
+    for (let cat in categoryCounts) {
+      document.getElementById(`${cat}Count`).innerText = categoryCounts[cat];
     }
 
-  } catch (err) {
-    console.error("Error loading stats:", err);
-    alert("Failed to load admin stats. Check console.");
+  } catch (error) {
+    console.error("Error loading dashboard:", error);
   }
 }
 
-// ---------------------
-// EXPORT HANDLERS
-// ---------------------
-exportCSVBtn.addEventListener("click", async () => {
-  const snapshot = await getDocs(collection(db, "uploads"));
-  const uploadsData = snapshot.docs.map(doc => doc.data());
-  let csv = "userId,category,imageURL,timestamp\n";
-  uploadsData.forEach(r => {
-    csv += `${r.userId},${r.category},${r.imageURL},${r.timestamp}\n`;
-  });
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "uploads.csv"; a.click();
-  URL.revokeObjectURL(url);
-});
+// ----- 5️⃣ Export JSON -----
+document.getElementById("exportJSON").addEventListener("click", async () => {
+  const uploadsSnapshot = await db.collection("uploads").get();
+  const uploadsData = uploadsSnapshot.docs.map(doc => doc.data());
 
-exportJSONBtn.addEventListener("click", async () => {
-  const snapshot = await getDocs(collection(db, "uploads"));
-  const uploadsData = snapshot.docs.map(doc => doc.data());
   const blob = new Blob([JSON.stringify(uploadsData, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
-  a.href = url; a.download = "uploads.json"; a.click();
+  a.href = url;
+  a.download = "uploads.json";
+  a.click();
   URL.revokeObjectURL(url);
 });
 
-// ---------------------
-// ADMIN AUTH CHECK
-// ---------------------
-onAuthStateChanged(auth, async user => {
-  if (!user) return window.location.href = "index.html";
+// ----- 6️⃣ Export CSV -----
+document.getElementById("exportCSV").addEventListener("click", async () => {
+  const uploadsSnapshot = await db.collection("uploads").get();
+  const uploadsData = uploadsSnapshot.docs.map(doc => doc.data());
 
-  if (!ADMIN_EMAILS.includes(user.email)) {
-    alert("Access Denied: You are not an admin.");
-    return window.location.href = "index.html";
-  }
+  let csv = "userId,category,imageURL,timestamp\n";
+  uploadsData.forEach(row => {
+    csv += `${row.userId},${row.category},${row.imageURL},${row.timestamp}\n`;
+  });
 
-  // Show admin content
-  adminMain.style.display = "block";
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
 
-  // Load stats
-  loadStats();
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "uploads.csv";
+  a.click();
+  URL.revokeObjectURL(url);
 });

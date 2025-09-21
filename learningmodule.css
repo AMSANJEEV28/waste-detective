@@ -1,0 +1,134 @@
+/* =====================
+   Global Reset & Variables
+===================== */
+:root {
+  --green: #2e7d32;
+  --green-dark: #1b5e20;
+  --white: #ffffff;
+  --beige: #f0fdf4;
+  --brown: #5d4037;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* =====================
+   Navbar
+===================== */
+.navbar {
+  background-color: var(--green);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  color: var(--white);
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links li a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.nav-links li a:hover {
+  text-decoration: underline;
+  color: #c7f0db;
+}
+
+/* =====================
+   Module Container
+===================== */
+.module-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem 2.5rem;
+  background: var(--beige);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Module Title */
+#moduleTitle {
+  font-size: 1.8rem;
+  color: var(--green);
+  margin-bottom: 1rem;
+}
+
+/* Module Content */
+#moduleContent p {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+/* =====================
+   Button
+===================== */
+.hv-btn,
+#nextBtn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hv-btn:hover,
+#nextBtn:hover {
+  background-color: var(--green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* =====================
+   Progress Text
+===================== */
+#moduleProgress {
+  margin-top: 1.5rem;
+  font-weight: 600;
+  color: var(--brown);
+}
+
+/* =====================
+   Responsive
+===================== */
+@media (max-width: 768px) {
+  .module-container {
+    padding: 1.5rem 1.8rem;
+  }
+
+  #moduleTitle {
+    font-size: 1.5rem;
+  }
+
+  #moduleContent p {
+    font-size: 0.95rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+}

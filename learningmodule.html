@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waste Segregation Learning Module</title>
+  <link rel="stylesheet" href="learningmodule.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+    Him Village EPrahari
+  </a></div>    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
+    </ul>
+  </nav>
+
+  <main class="module-container">
+    <h2 id="moduleTitle">Loading module...</h2>
+    <div id="moduleContent">Please wait while we load your module.</div>
+    <button id="nextBtn" style="display:none;">I have read and understood →</button>
+    <div id="moduleProgress">Progress: 0%</div>
+  </main>
+
+
+
+<script src="/env.js"></script>
+
+<script type="module">
+import { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, serverTimestamp } from './firebase-config.js';
+
+
+
+
+const moduleSections = [
+  {
+   title: "Introduction to Waste Management",
+    content_en: "Waste management is a crucial practice that helps protect our environment, minimize pollution, and conserve natural resources. By properly segregating, recycling, and disposing of waste, we can prevent harmful substances from contaminating soil, water, and air. Effective waste management not only reduces the burden on landfills but also promotes the reuse of materials, supporting a circular economy. Communities that follow proper waste management practices enjoy cleaner surroundings, healthier living conditions, and a sustainable future for generations to come. Everyone’s participation is vital, as even small steps like separating biodegradable and non-biodegradable waste can make a significant impact.",
+    content_hi: "कचरा प्रबंधन हमारे पर्यावरण की रक्षा करने, प्रदूषण को कम करने और प्राकृतिक संसाधनों को संरक्षित करने के लिए एक महत्वपूर्ण प्रक्रिया है। कचरे को सही तरीके से अलग करना, पुनर्चक्रित करना और सुरक्षित रूप से निपटाना हमें मिट्टी, पानी और हवा को हानिकारक तत्वों से बचाने में मदद करता है। प्रभावी कचरा प्रबंधन से न केवल लैंडफिल पर दबाव कम होता है, बल्कि सामग्री के पुन: उपयोग को भी बढ़ावा मिलता है, जो एक सतत और चक्रीय अर्थव्यवस्था का समर्थन करता है। जो समुदाय कचरा प्रबंधन के नियमों का पालन करते हैं, उनके आस-पास का वातावरण स्वच्छ रहता है, जीवन स्तर बेहतर होता है और आने वाली पीढ़ियों के लिए एक स्थायी भविष्य सुनिश्चित होता है। हर व्यक्ति की भागीदारी महत्वपूर्ण है, क्योंकि जैविक और अजैविक कचरे को अलग करने जैसे छोटे कदम भी बड़े परिवर्तन ला सकते हैं।"
+  },
+{
+    title: "What is Waste Segregation?",
+    content_en: "Waste segregation is the systematic process of separating different types of waste into specific categories such as plastic, metal, glass, paper, organic, and general trash. By segregating waste at the point of generation—whether at homes, schools, offices, or public spaces—we can ensure that recyclable materials are not contaminated, hazardous substances are safely handled, and organic waste is processed efficiently for composting. Proper segregation improves recycling efficiency, reduces environmental pollution, and supports sustainable waste management practices, ultimately contributing to a cleaner and healthier environment.",
+    content_hi: "कचरा पृथक्करण एक व्यवस्थित प्रक्रिया है जिसमें कचरे को विभिन्न श्रेणियों जैसे प्लास्टिक, धातु, काँच, कागज, जैविक और सामान्य कचरे में अलग किया जाता है। घरों, स्कूलों, कार्यालयों या सार्वजनिक स्थानों पर कचरे के स्रोत पर इसे अलग करके यह सुनिश्चित किया जा सकता है कि पुनर्चक्रण योग्य सामग्री दूषित न हो, खतरनाक पदार्थ सुरक्षित तरीके से प्रबंधित हों और जैविक कचरे का प्रभावी रूप से कम्पोस्टिंग किया जा सके। सही तरीके से पृथक्करण करने से पुनर्चक्रण की क्षमता बढ़ती है, पर्यावरणीय प्रदूषण कम होता है और स्थायी कचरा प्रबंधन को बढ़ावा मिलता है, जिससे अंततः एक स्वच्छ और स्वस्थ वातावरण सुनिश्चित होता है।"
+},
+{
+    title: "Why Waste Segregation is Important",
+    content_en: "Waste segregation is vital for maintaining a clean and sustainable environment. By separating waste into categories like plastic, metal, glass, paper, and organic matter, we can significantly reduce the burden on landfills, prevent harmful chemicals and pollutants from contaminating soil, water, and air, and improve the efficiency of recycling processes. Proper segregation also supports the production of compost and waste-to-energy initiatives, contributing to a circular economy. Communities that practice effective waste segregation experience cleaner surroundings, healthier living conditions, and a sustainable future. Every small effort, from households to offices, plays a crucial role in achieving these benefits.",
+    content_hi: "कचरा पृथक्करण स्वच्छ और स्थायी पर्यावरण बनाए रखने के लिए अत्यंत महत्वपूर्ण है। कचरे को प्लास्टिक, धातु, काँच, कागज और जैविक पदार्थ जैसी श्रेणियों में अलग करने से लैंडफिल पर दबाव कम होता है, हानिकारक रसायन और प्रदूषक मिट्टी, पानी और हवा को दूषित होने से बचते हैं और पुनर्चक्रण की प्रक्रिया अधिक प्रभावी होती है। सही पृथक्करण कम्पोस्टिंग और वेस्ट-टू-एनर्जी जैसी पहलों का समर्थन करता है, जिससे चक्रीय अर्थव्यवस्था को बढ़ावा मिलता है। जो समुदाय प्रभावी कचरा पृथक्करण का पालन करते हैं, उनके आस-पास का वातावरण स्वच्छ रहता है, जीवन स्तर बेहतर होता है और भविष्य के लिए स्थिरता सुनिश्चित होती है। घरों से लेकर कार्यालयों तक हर छोटे प्रयास का इस प्रक्रिया में महत्वपूर्ण योगदान होता है।"
+},
+  {
+    title: "Benefits of Proper Waste Management",
+    content_en: "Effective waste management contributes to cleaner cities, reduces greenhouse gas emissions from landfills, conserves resources, and promotes public health. Communities practicing proper waste management see tangible improvements in quality of life, reduced disease, and enhanced aesthetic appeal. Additionally, recycling and reusing materials reduce the demand for raw materials, supporting sustainability.",
+    content_hi: "प्रभावी कचरा प्रबंधन से शहर स्वच्छ रहते हैं, लैंडफिल से ग्रीनहाउस गैस उत्सर्जन कम होता है, संसाधनों का संरक्षण होता है और सार्वजनिक स्वास्थ्य में सुधार होता है। सही कचरा प्रबंधन करने वाले समुदायों में जीवन स्तर में वास्तविक सुधार, बीमारियों में कमी और सौंदर्य में वृद्धि देखी जाती है। इसके अतिरिक्त, सामग्री को पुनर्चक्रित और पुन: उपयोग करने से कच्चे माल की मांग कम होती है, जो स्थिरता का समर्थन करता है।"
+  }, 
+    {
+    title: "Your Assignment",
+    content_en: "After completing this module, you'll move to the image capture assignment where you will apply your learning by taking photos of different types of waste.",
+    content_hi: "इस मॉड्यूल को पूरा करने के बाद, आप इमेज कैप्चर असाइनमेंट पर जाएंगे जहाँ आप विभिन्न प्रकार के कचरे की तस्वीरें लेकर अपनी सीख को लागू करेंगे।"
+  }];
+// ---------------------
+// DOM ELEMENTS
+// ---------------------
+let currentSection = 0;
+const titleEl = document.getElementById('moduleTitle');
+const contentEl = document.getElementById('moduleContent');
+const nextBtn = document.getElementById('nextBtn');
+const progressEl = document.getElementById('moduleProgress');
+
+let userRef;
+
+// ---------------------
+// AUTH STATE CHANGE
+// ---------------------
+onAuthStateChanged(auth, async (user) => {
+  console.log("Auth state changed. User:", user);
+
+  if (!user) {
+    console.log("No user logged in.");
+    titleEl.textContent = "Please log in first";
+    contentEl.innerHTML = "<p>You must log in to access the learning module.</p>";
+    nextBtn.style.display = "none";
+    progressEl.textContent = "";
+    return;
+  }
+
+  userRef = doc(db, 'users', user.uid);
+  console.log("User ref:", userRef);
+
+  try {
+    const snap = await getDoc(userRef);
+    console.log("Firestore snapshot:", snap.exists(), snap.data());
+
+    if (!snap.exists()) {
+      console.log("User doc does not exist. Creating new doc.");
+      await setDoc(userRef, {
+        moduleProgressSection: 0,
+        moduleCompleted: false,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      loadSection();
+      return;
+    }
+
+    const data = snap.data();
+    console.log("User data loaded:", data);
+
+    if (data.moduleCompleted) {
+      console.log("Module already completed");
+      titleEl.textContent = "Module Already Completed ✅";
+      contentEl.innerHTML = "<p>You have completed the learning module. Proceed to your assignment → Capture real images.</p>";
+      progressEl.textContent = "Progress: 100%";
+      nextBtn.style.display = "none";
+    } else {
+      currentSection = data.moduleProgressSection || 0;
+      console.log("Resuming at section:", currentSection);
+      loadSection();
+    }
+
+  } catch (err) {
+    console.error("Error getting user doc:", err);
+    titleEl.textContent = "Error loading module";
+    contentEl.innerHTML = "<p>Unable to load module. Check console.</p>";
+    nextBtn.style.display = "none";
+  }
+});
+
+// ---------------------
+// LOAD SECTION FUNCTION
+// ---------------------
+function loadSection() {
+  const section = moduleSections[currentSection];
+  if (!section) {
+    console.warn("No section found for current index:", currentSection);
+    return;
+  }
+
+  console.log("Loading section:", currentSection, section.title);
+  titleEl.textContent = section.title;
+  contentEl.innerHTML = `<p>${section.content_en}</p><p>${section.content_hi}</p>`;
+
+  const percent = Math.round(((currentSection + 1) / moduleSections.length) * 100);
+  progressEl.textContent = `Progress: ${percent}%`;
+  nextBtn.style.display = "inline-block";
+}
+
+// ---------------------
+// NEXT BUTTON CLICK
+// ---------------------
+nextBtn.addEventListener('click', async () => {
+  if (!userRef) {
+    console.warn("No userRef defined. Can't save progress.");
+    return;
+  }
+
+  currentSection++;
+  console.log("Next button clicked. Moving to section:", currentSection);
+
+  if (currentSection >= moduleSections.length) {
+    console.log("Module completed. Updating Firestore and redirecting...");
+    await updateDoc(userRef, {
+      moduleCompleted: true,
+      moduleProgressSection: moduleSections.length
+    });
+    progressEl.textContent = "Progress: 100%";
+    window.location.href = 'upload.html';
+  } else {
+    console.log("Saving progress to Firestore:", currentSection);
+    await updateDoc(userRef, { moduleProgressSection: currentSection });
+    loadSection();
+  }
+});
+</script>
+</body>
+</html>

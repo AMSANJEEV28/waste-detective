@@ -1,13 +1,18 @@
-/* Global */
+/* =======================
+   Global Styles
+======================= */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f7f6;
   color: #1b5e20;
+  line-height: 1.6;
 }
 
-/* Navbar */
+/* =======================
+   Navbar
+======================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -18,11 +23,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .nav-logo {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .nav-links {
@@ -30,109 +37,166 @@ body {
   display: flex;
   gap: 1rem;
   margin: 0;
+  padding: 0;
 }
 
 .nav-links li a {
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .nav-links li a:hover {
   background: #1b5e20;
+  transform: translateY(-1px);
+}
+
+/* =======================
+   Main Content
+======================= */
+.main-content {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
 }
 
 /* Headings */
 h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 15px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2e7d32;
 }
 
 h3 {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    font-size: 1.4rem;
-    font-weight: bold;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2e7d32;
 }
 
 /* Status messages */
 #userStatus, #status {
-    font-weight: 600;
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #1b5e20;
 }
 
-/* Table Styling */
+/* =======================
+   Table Styling
+======================= */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 700px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 thead {
-    background-color: #2e7d32;
-    color: #fff;
+  background-color: #2e7d32;
+  color: #fff;
 }
 
 th, td {
-    padding: 12px 15px;
-    text-align: center;
-    font-size: 1rem;
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 1rem;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f1fdf1;
+  background-color: #f1fdf1;
 }
 
 tbody tr:hover {
-    background-color: #dcedc8;
+  background-color: #dcedc8;
+  transition: background 0.2s;
 }
 
 /* Highlight Total Points and Total Images */
 #totalPoints, #totalImages {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #1b5e20;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1b5e20;
 }
 
-/* Responsive */
+/* =======================
+   Progress Bars Styling
+======================= */
+.progress-container {
+  margin: 12px 0;
+}
+
+.progress-container span {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  background: #e0e0e0;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Different colors for each bar */
+#moduleProgressBar {
+  background-color: #4caf50; /* green */
+}
+
+#uploadProgressBar {
+  background-color: #2196f3; /* blue */
+}
+
+#pointsProgressBar {
+  background-color: #ff9800; /* orange */
+}
+
+/* =======================
+   Responsive
+======================= */
 @media screen and (max-width: 600px) {
-    body {
-        padding: 15px;
-    }
+  body {
+    padding: 15px;
+  }
 
-    h2 {
-        font-size: 1.6rem;
-    }
+  h2 {
+    font-size: 1.6rem;
+  }
 
-    h3 {
-        font-size: 1.2rem;
-    }
+  h3 {
+    font-size: 1.2rem;
+  }
 
-    th, td {
-        font-size: 0.9rem;
-        padding: 8px 10px;
-    }
+  th, td {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
 
-    #userStatus, #status {
-        font-size: 1rem;
-    }
+  #userStatus, #status {
+    font-size: 1rem;
+  }
+
+  .progress-bar-bg {
+    height: 16px;
+  }
 }
-
-
-.main-content {
-  min-height: 80vh;
-  padding: 2rem;
-}
-
-
-

@@ -1,13 +1,18 @@
-/* Global */
+/* =======================
+   Global Styles
+======================= */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f7f6;
   color: #1b5e20;
+  line-height: 1.6;
 }
 
-/* Navbar */
+/* =======================
+   Navbar
+======================= */
 .admin-navbar {
   display: flex;
   justify-content: space-between;
@@ -15,11 +20,16 @@ body {
   background-color: #2e7d32;
   padding: 0.8rem 2rem;
   color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .admin-navbar .nav-logo {
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
 }
 
 .admin-navbar .nav-links {
@@ -27,25 +37,33 @@ body {
   display: flex;
   gap: 1rem;
   margin: 0;
+  padding: 0;
 }
 
 .admin-navbar .nav-links li a {
   color: #fff;
   text-decoration: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 5px;
-  transition: background 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .admin-navbar .nav-links li a:hover {
   background-color: #1b5e20;
+  transform: translateY(-1px);
 }
 
-/* Main content */
+/* =======================
+   Main Content
+======================= */
 .admin-main {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* Headings */
@@ -67,18 +85,26 @@ body {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
 .stats-card ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .stats-card ul li {
   font-weight: 600;
   margin: 6px 0;
+  font-size: 1rem;
+  color: #1b5e20;
 }
 
 /* Buttons */
@@ -88,32 +114,47 @@ body {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px 22px;
   margin: 0.5rem;
   border: none;
   background-color: #2e7d32;
   color: #fff;
   font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   border-radius: 6px;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 
 button:hover {
   background-color: #1b5e20;
+  transform: translateY(-1px);
 }
 
-/* Responsive */
+/* =======================
+   Responsive
+======================= */
 @media screen and (max-width: 600px) {
   .admin-navbar {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .admin-navbar .nav-links {
     flex-direction: column;
     gap: 0.5rem;
   }
+
+  .admin-main {
+    padding: 1rem;
+  }
+
+  .stats-card {
+    padding: 1rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px 0;
+  }
 }
-
-
-

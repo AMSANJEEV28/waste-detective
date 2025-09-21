@@ -9,20 +9,21 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">Him Village EPrahari</div>
+    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+    Him Village EPrahari
+  </a></div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="upload.html">Upload</a></li>
-      <li><a href="certificate.html">Certificate</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
     </ul>
   </nav>
 
   <main class="main-content">
     <section class="hero-section">
       <h1>Be a Waste Detective – Segregate for a Better Future</h1>
-      <p>Upload waste images, earn points, and claim a certificate!</p>
-      <p>Rules: Upload clear images of waste, categorize correctly, 5 per category unlocks certificate.</p>
+      <p><strong>Learn</strong> the importance of waste management, complete the <strong>interactive module</strong>, and then <strong>upload</strong> real images to earn points!</p>
+      <p>Rules: Capture real images of waste, categorize correctly, 2 per category unlocks certificate.</p>
 
       <div id="loginSection">
         <button id="loginBtn" class="hv-btn">Login with Google</button>
@@ -31,17 +32,24 @@
       <div id="profile" style="display:none;">
         <h3>Welcome, <span id="username"></span></h3>
         <p>Email: <span id="useremail"></span></p>
-        <p>Total Points: <span id="userpoints">0</span> / 30</p>
-        <button id="joinBtn" class="hv-btn">Join Now → Upload Page</button>
+        <p>Module Progress: <span id="moduleProgress">0%</span></p>
+        <p>Upload Assignment Progress: <span id="userpoints">0%</span></p>
+
+        <!-- Buttons updated for new flow -->
+        <button id="learnModuleBtn" class="hv-btn">Start Learning Module</button>
+        <button id="joinBtn" class="hv-btn">Go to Assignment → Capture Images</button>
         <br><br>
+
+        <!-- Logout button moved inside profile -->
         <button id="logoutBtn" class="hv-btn">Logout</button>
       </div>
+
     </section>
   </main>
 
   <!-- Scripts -->
-<script src="env.js"></script>
-<script type="module" src="firebase-config.js"></script>
-<script type="module" src="index.js"></script>
+  <script src="env.js"></script>
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="index.js"></script>
 </body>
 </html>

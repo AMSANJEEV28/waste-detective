@@ -1,13 +1,18 @@
-/* Global */
+/* =======================
+   Global Styles
+======================= */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f7f6;
   color: #1b5e20;
+  line-height: 1.6;
 }
 
-/* Navbar */
+/* =======================
+   Navbar
+======================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -18,11 +23,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .nav-logo {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .nav-links {
@@ -30,84 +37,138 @@ body {
   display: flex;
   gap: 1rem;
   margin: 0;
+  padding: 0;
 }
 
 .nav-links li a {
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .nav-links li a:hover {
   background: #1b5e20;
+  transform: translateY(-1px);
 }
 
-/* Hero Section */
+/* =======================
+   Main Content
+======================= */
 .main-content {
   min-height: 80vh;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  text-align: center;
 }
 
 /* Heading */
 h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #2e7d32;
 }
 
 /* Status Text */
 #userStatus, #status {
-    font-weight: 600;
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #1b5e20;
 }
 
-/* Button Styling */
+/* Per-category progress */
+.progress-list {
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-list li {
+  background: #e8f5e9;
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2e7d32;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* =======================
+   Button Styling
+======================= */
 button {
-    padding: 12px 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    background-color: #2e7d32;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #2e7d32;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 button:hover:enabled {
-    background-color: #1b5e20;
-    transform: translateY(-2px);
+  background-color: #1b5e20;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(46,125,50,0.5);
 }
 
 button:disabled {
-    cursor: not-allowed;
-    background-color: #a5d6a7;
-    color: #ffffffcc;
+  cursor: not-allowed;
+  background-color: #a5d6a7;
+  color: #ffffffcc;
+  box-shadow: none;
 }
 
-/* Responsive */
+/* =======================
+   Certificate Preview (Optional)
+======================= */
+#certPreview {
+  margin-top: 2rem;
+  max-width: 100%;
+  border: 2px dashed #2e7d32;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+  display: none; /* Show with JS if preview is implemented */
+}
+
+/* =======================
+   Responsive
+======================= */
 @media screen and (max-width: 600px) {
-    body {
-        padding: 15px;
-    }
+  body {
+    padding: 15px;
+  }
 
-    h2 {
-        font-size: 1.6rem;
-    }
+  h2 {
+    font-size: 1.6rem;
+  }
 
-    button {
-        padding: 10px 20px;
-        font-size: 0.95rem;
-    }
+  button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
 
-    #userStatus, #status {
-        font-size: 1rem;
-    }
+  #userStatus, #status {
+    font-size: 1rem;
+  }
+
+  .nav-links {
+    gap: 0.6rem;
+  }
+
+  .nav-links li a {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+  }
 }

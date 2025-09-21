@@ -1,53 +1,75 @@
-/* Global */
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f4f7f6;
-  color: #1b5e20;
+
+
+/* =====================
+   Global Styles
+===================== */
+:root {
+  --green-dark: #1b5e20;
+  --green: #2e7d32;
+  --green-light: #a5d6a7;
+  --beige: #f1f8e9;
+  --brown: #5d4037;
+  --white: #ffffff;
 }
 
-/* Navbar */
+body {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, var(--beige), #e8f5e9);
+  color: var(--green-dark);
+  line-height: 1.6;
+}
+
+/* =====================
+   Navbar
+===================== */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2e7d32;
-  padding: 0.5rem 2rem;
-  color: #fff;
+  background: var(--green);
+  padding: 0.8rem 2rem;
+  color: var(--white);
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-logo {
-  font-size: 1.3rem;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
   margin: 0;
+  padding: 0;
 }
 
 .nav-links li a {
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   font-weight: 500;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .nav-links li a:hover {
-  background: #1b5e20;
+  background: var(--green-dark);
+  transform: scale(1.05);
 }
 
-/* Hero Section */
+/* =====================
+   Hero Section
+===================== */
 .main-content {
-  min-height: 80vh;
+  min-height: 85vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,38 +77,105 @@ body {
 }
 
 .hero-section {
-  background: #fff;
-  padding: 2rem 3rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: var(--white);
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 600px;
+  max-width: 700px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative Leaf Accent */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: url('https://img.icons8.com/ios-filled/100/4caf50/leaf.png')
+    no-repeat center/contain;
+  opacity: 0.15;
+  transform: rotate(-20deg);
 }
 
 .hero-section h1 {
-  font-size: 2rem;
-  color: #2e7d32;
+  font-size: 2.2rem;
+  color: var(--green);
   margin-bottom: 1rem;
 }
 
 .hero-section p {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  color: #444;
 }
 
+/* =====================
+   Buttons
+===================== */
 .hv-btn {
   display: inline-block;
   text-decoration: none;
-  padding: 0.6rem 1.2rem;
-  background: #2e7d32;
-  color: #fff;
-  border-radius: 6px;
+  padding: 0.7rem 1.5rem;
+  background: var(--green);
+  color: var(--white);
+  border-radius: 30px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin: 0.5rem 0;
-  transition: background 0.2s ease;
+  margin: 0.5rem 0.3rem;
+  transition: all 0.3s ease;
+  border: none;
 }
 
 .hv-btn:hover {
-  background: #1b5e20;
+  background: var(--green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* =====================
+   Profile Box
+===================== */
+#profile {
+  background: var(--beige);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+#profile h3 {
+  margin-top: 0;
+  color: var(--green-dark);
+}
+
+#profile span {
+  font-weight: 600;
+  color: var(--brown);
+}
+
+/* =====================
+   Responsive Design
+===================== */
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 0.8rem;
+  }
+
+  .hero-section {
+    padding: 2rem;
+  }
+
+  .hero-section h1 {
+    font-size: 1.6rem;
+  }
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
 }

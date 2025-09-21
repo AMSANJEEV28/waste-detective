@@ -4,29 +4,33 @@
   <meta charset="utf-8">
   <title>Waste Detective - Certificate</title>
     <link rel="stylesheet" href="certificate.css">
+    <link rel="stylesheet" href="styles.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
       <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">Him Village EPrahari</div>
-    <ul class="nav-links">
+    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+    Him Village EPrahari
+  </a></div>    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="upload.html">Upload</a></li>
-      <li><a href="certificate.html">Certificate</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="certificate.html">Certificate</a></li>
     </ul>
   </nav>
 
 
   <div class="main-content">
 
+    <section class="hero-section">
+
   <h2>Waste Detective Certificate</h2>
   <div id="userStatus">Loading user info...</div>
   <div id="status">Checking eligibility for certificate...</div>
-  <button id="certBtn" disabled>Upload at least 5 images per category to unlock certificate</button>
+  <button id="certBtn" disabled>Upload at least 2 images per category to unlock certificate</button>
 
+    </section>
 
   </div>
 <script src="env.js"></script>
@@ -56,17 +60,17 @@
         // TESTING: just 1 upload in any category unlocks certificate
         // let totalUploads = categories.reduce((sum, cat) => sum + (progress[cat] || 0), 0);
         // let eligible = totalUploads >= 1;
-        let eligible = categories.every(cat => (progress[cat] || 0) >= 5);
+        let eligible = categories.every(cat => (progress[cat] || 0) >= 2);
 
 
         if (eligible) {
           certBtn.disabled = false;
           certBtn.textContent = "Download Certificate";
-          statusDiv.textContent = "Congratulations! You have uploaded at least 5 images in each category.";
+          statusDiv.textContent = "Congratulations! 🎉 You have uploaded at least 2 images in each category.";
         } else {
           certBtn.disabled = true;
-          certBtn.textContent = "Upload at least 5 images per category to unlock certificate";
-          statusDiv.textContent = "You need at least 5 images per category to unlock certificate.";
+          certBtn.textContent = "Upload at least 2 images per category to unlock certificate";
+          statusDiv.textContent = "You need at least 2 images per category to unlock certificate.";
         }
       } else {
         statusDiv.textContent = "User data not found. Upload at least one image first.";
@@ -82,23 +86,15 @@
     });
 
     const img = new Image();
-    img.src = 'certificate.jpg';
+    img.src = 'digital_certificate.jpg';
     img.onload = function() {
         doc.addImage(img, 'JPG', 0, 0, 1040, 720);
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(30);
+        doc.setFont("arial nova", "bold");
+        doc.setFontSize(50);
         doc.setTextColor(0, 102, 51);
-        doc.text(name, 520, 300, { align: "center" });
+        doc.text(name, 520, 360, { align: "center" });
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(25);
-        doc.text("Be a Waste Detective – Segregate for a Better Future", 520, 400, { align: "center" });
-
-        const today = new Date().toLocaleDateString();
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(25);
-        doc.text(`Date: ${today}`, 520, 500, { align: "center" });
 
         doc.save(`WasteDetective_Certificate_${name}.pdf`);
     }

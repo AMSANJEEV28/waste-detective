@@ -1,158 +1,250 @@
-/* Global */
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f4f7f6;
-  color: #1b5e20;
+
+
+/* =====================
+   Global Styles
+===================== */
+:root {
+  --green-dark: #1b5e20;
+  --green: #2e7d32;
+  --green-light: #a5d6a7;
+  --beige: #f1f8e9;
+  --brown: #5d4037;
+  --white: #ffffff;
 }
 
-/* Navbar */
+body {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, var(--beige), #e8f5e9);
+  color: var(--green-dark);
+  line-height: 1.6;
+}
+
+/* =====================
+   Navbar
+===================== */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2e7d32;
-  padding: 0.5rem 2rem;
-  color: #fff;
+  background: var(--green);
+  padding: 0.8rem 2rem;
+  color: var(--white);
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-logo {
-  font-size: 1.3rem;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
   margin: 0;
+  padding: 0;
 }
 
 .nav-links li a {
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   font-weight: 500;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .nav-links li a:hover {
-  background: #1b5e20;
+  background: var(--green-dark);
+  transform: scale(1.05);
 }
 
-/* Headings */
-h2 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+/* =====================
+   Main Upload Section
+===================== */
+.main-content {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 2rem;
 }
 
+.main-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--green);
+  position: relative;
+}
+
+/* Decorative underline */
+.main-content h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--green);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+/* Status Box */
+#userStatus {
+  background: var(--beige);
+  padding: 0.8rem 1rem;
+  border-left: 5px solid var(--green);
+  border-radius: 6px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* Labels & Inputs */
 label {
-    font-weight: 600;
-    font-size: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--brown);
 }
 
-select, input[type="file"] {
-    padding: 8px 10px;
-    font-size: 1rem;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    outline: none;
-    width: 100%;
-    max-width: 300px;
+select,
+input[type="file"] {
+  padding: 10px 12px;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 100%;
+  max-width: 320px;
+  background: var(--white);
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
-/* Upload Button */
-button#uploadBtn {
-    background-color: #2e7d32;
-    color: #fff;
-    padding: 10px 25px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+select:focus,
+input[type="file"]:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
 }
 
-button#uploadBtn:hover {
-    background-color: #1b5e20;
-    transform: translateY(-2px);
+/* =====================
+   Upload Button
+===================== */
+button#uploadBtn, .button {
+  background-color: var(--green);
+  color: var(--white);
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
 }
 
-/* Status Messages */
-#status, #userStatus {
-    font-weight: 600;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    color: #1b5e20;
+button#uploadBtn:hover, .button:hover {
+  background-color: var(--green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
 
-/* Progress Bar */
+/* =====================
+   Status & Progress
+===================== */
+#status {
+  font-weight: 600;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: var(--green-dark);
+}
+
 progress#progressBar {
-    width: 100%;
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    appearance: none;
-    margin-top: 10px;
-    margin-bottom: 15px;
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  appearance: none;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 progress#progressBar::-webkit-progress-bar {
-    background-color: #e6f2e6;
-    border-radius: 10px;
+  background-color: #e6f2e6;
+  border-radius: 10px;
 }
 
 progress#progressBar::-webkit-progress-value {
-    background-color: #2e7d32;
-    border-radius: 10px;
+  background-color: var(--green);
+  border-radius: 10px;
 }
 
 progress#progressBar::-moz-progress-bar {
-    background-color: #2e7d32;
-    border-radius: 10px;
+  background-color: var(--green);
+  border-radius: 10px;
 }
 
-/* Progress Display */
+/* Progress Display Card */
 #progressDisplay {
-    margin-top: 10px;
-    font-weight: normal;
-    font-size: 1rem;
-    line-height: 1.5;
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    max-width: 400px;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: var(--white);
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 400px;
+  text-align: left;
 }
 
-/* Responsive */
+/* =====================
+   Responsive
+===================== */
 @media screen and (max-width: 600px) {
-    body {
-        padding: 20px;
-    }
+  .nav-links {
+    gap: 0.6rem;
+  }
 
-    select, input[type="file"], button#uploadBtn {
-        width: 100%;
-    }
+  .main-content {
+    padding: 1rem;
+  }
 
-    #progressDisplay {
-        max-width: 100%;
-    }
+  select,
+  input[type="file"],
+  button#uploadBtn, .button {
+    width: 100%;
+  }
+
+  #progressDisplay {
+    max-width: 100%;
+  }
 }
 
 
-/* Hero Section */
-.main-content {
-  min-height: 80vh;
-  padding: 2rem;
+
+.dots::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--green-dark);
+  border-radius: 50%;
+  margin-left: 3px;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }

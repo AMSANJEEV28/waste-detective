@@ -1,0 +1,20 @@
+{
+  "name": "waste-detective-app",
+  "version": "1.0.0",
+  "description": "Web app for waste management learning and image uploads",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "live-server ./ --port=5500 --open=index.html",
+    "build": "echo 'No build step defined yet'"
+  },
+  "keywords": ["waste", "environment", "firebase", "cloudinary"],
+  "author": "Sanjeev",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^11.25.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

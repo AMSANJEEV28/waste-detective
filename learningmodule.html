@@ -8,16 +8,21 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
-    Him Village EPrahari
-  </a></div>    <ul class="nav-links">
+    <div class="nav-logo">
+      <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+        Him Village EPrahari
+      </a>
+    </div>
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
       <li><a href="certificate.html">Certificate</a></li>
     </ul>
   </nav>
 
+  <!-- Main module container -->
   <main class="module-container">
     <h2 id="moduleTitle">Loading module...</h2>
     <div id="moduleContent">Please wait while we load your module.</div>
@@ -27,14 +32,14 @@
 
 
 
-<script src="/env.js"></script>
+  <!-- Script -->
+  <script type="module">
+    import { auth, db, onAuthStateChanged } from './firebase-config.js';
+    import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
-<script type="module">
-import { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, serverTimestamp } from './firebase-config.js';
-
-import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
-
-
+    // ---------------------
+    // Module Sections
+    // ---------------------
 
 const moduleSections = [
   {
@@ -62,118 +67,107 @@ const moduleSections = [
     content_en: "After completing this module, you'll move to the image capture assignment where you will apply your learning by taking photos of different types of waste.",
     content_hi: "इस मॉड्यूल को पूरा करने के बाद, आप इमेज कैप्चर असाइनमेंट पर जाएंगे जहाँ आप विभिन्न प्रकार के कचरे की तस्वीरें लेकर अपनी सीख को लागू करेंगे।"
   }];
-// ---------------------
-// DOM ELEMENTS
-// ---------------------
-let currentSection = 0;
-const titleEl = document.getElementById('moduleTitle');
-const contentEl = document.getElementById('moduleContent');
-const nextBtn = document.getElementById('nextBtn');
-const progressEl = document.getElementById('moduleProgress');
 
-let userRef;
 
-// ---------------------
-// AUTH STATE CHANGE
-// ---------------------
-onAuthStateChanged(auth, async (user) => {
-  console.log("Auth state changed. User:", user);
 
-  if (!user) {
-    console.log("No user logged in.");
-    titleEl.textContent = "Please log in first";
-    contentEl.innerHTML = "<p>You must log in to access the learning module.</p>";
-    nextBtn.style.display = "none";
-    progressEl.textContent = "";
-    return;
-  }
 
-  userRef = doc(db, 'users', user.uid);
-  console.log("User ref:", userRef);
+  
+    // ---------------------
+    // DOM Elements
+    // ---------------------
+    let currentSection = 0;
+    const titleEl = document.getElementById('moduleTitle');
+    const contentEl = document.getElementById('moduleContent');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressEl = document.getElementById('moduleProgress');
 
-  try {
-    const snap = await getDoc(userRef);
-    console.log("Firestore snapshot:", snap.exists(), snap.data());
+    let userRef;
 
-    if (!snap.exists()) {
-      console.log("User doc does not exist. Creating new doc.");
-      await setDoc(userRef, {
-        moduleProgressSection: 0,
-        moduleCompleted: false,
-        createdAt: serverTimestamp()
-      }, { merge: true });
-      loadSection();
-      return;
-    }
+    // ---------------------
+    // AUTH STATE CHANGE
+    // ---------------------
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        titleEl.textContent = "Please log in first";
+        contentEl.innerHTML = "<p>You must log in to access the learning module.</p>";
+        nextBtn.style.display = "none";
+        progressEl.textContent = "";
+        return;
+      }
 
-    const data = snap.data();
-    console.log("User data loaded:", data);
+      userRef = doc(db, 'users', user.uid);
 
-    if (data.moduleCompleted) {
-      console.log("Module already completed");
-      titleEl.textContent = "Module Already Completed ✅";
-      contentEl.innerHTML = "<p>You have completed the learning module. Proceed to your assignment → Capture real images.</p>";
-      progressEl.textContent = "Progress: 100%";
-      nextBtn.style.display = "none";
-    } else {
-      currentSection = data.moduleProgressSection || 0;
-      console.log("Resuming at section:", currentSection);
-      loadSection();
-    }
+      try {
+        const snap = await getDoc(userRef);
 
-  } catch (err) {
-    console.error("Error getting user doc:", err);
-    titleEl.textContent = "Error loading module";
-    contentEl.innerHTML = "<p>Unable to load module. Check console.</p>";
-    nextBtn.style.display = "none";
-  }
-});
+        if (!snap.exists()) {
+          // Create user doc if not exists
+          await setDoc(userRef, {
+            moduleProgressSection: 0,
+            moduleCompleted: false,
+            createdAt: serverTimestamp()
+          }, { merge: true });
+          loadSection();
+          return;
+        }
 
-// ---------------------
-// LOAD SECTION FUNCTION
-// ---------------------
-function loadSection() {
-  const section = moduleSections[currentSection];
-  if (!section) {
-    console.warn("No section found for current index:", currentSection);
-    return;
-  }
+        const data = snap.data();
 
-  console.log("Loading section:", currentSection, section.title);
-  titleEl.textContent = section.title;
-  contentEl.innerHTML = `<p>${section.content_en}</p><p>${section.content_hi}</p>`;
+        if (data.moduleCompleted) {
+          titleEl.textContent = "Module Already Completed ✅";
+          contentEl.innerHTML = "<p>You have completed the learning module. Proceed to your assignment → Capture real images.</p>";
+          progressEl.textContent = "Progress: 100%";
+          nextBtn.style.display = "none";
+        } else {
+          currentSection = data.moduleProgressSection || 0;
+          loadSection();
+        }
 
-  const percent = Math.round(((currentSection + 1) / moduleSections.length) * 100);
-  progressEl.textContent = `Progress: ${percent}%`;
-  nextBtn.style.display = "inline-block";
-}
-
-// ---------------------
-// NEXT BUTTON CLICK
-// ---------------------
-nextBtn.addEventListener('click', async () => {
-  if (!userRef) {
-    console.warn("No userRef defined. Can't save progress.");
-    return;
-  }
-
-  currentSection++;
-  console.log("Next button clicked. Moving to section:", currentSection);
-
-  if (currentSection >= moduleSections.length) {
-    console.log("Module completed. Updating Firestore and redirecting...");
-    await updateDoc(userRef, {
-      moduleCompleted: true,
-      moduleProgressSection: moduleSections.length
+      } catch (err) {
+        console.error("Error loading module data:", err);
+        titleEl.textContent = "Error loading module";
+        contentEl.innerHTML = "<p>Unable to load module. Check console for details.</p>";
+        nextBtn.style.display = "none";
+      }
     });
-    progressEl.textContent = "Progress: 100%";
-    window.location.href = 'upload.html';
-  } else {
-    console.log("Saving progress to Firestore:", currentSection);
-    await updateDoc(userRef, { moduleProgressSection: currentSection });
-    loadSection();
-  }
-});
-</script>
+
+    // ---------------------
+    // Load Section
+    // ---------------------
+    function loadSection() {
+      const section = moduleSections[currentSection];
+      if (!section) return;
+
+      titleEl.textContent = section.title;
+      contentEl.innerHTML = `<p>${section.content_en}</p><p>${section.content_hi}</p>`;
+
+      const percent = Math.round(((currentSection + 1) / moduleSections.length) * 100);
+      progressEl.textContent = `Progress: ${percent}%`;
+      nextBtn.style.display = "inline-block";
+    }
+
+    // ---------------------
+    // Next Button Click
+    // ---------------------
+    nextBtn.addEventListener('click', async () => {
+      if (!userRef) return;
+
+      currentSection++;
+
+      if (currentSection >= moduleSections.length) {
+        // Module complete
+        await updateDoc(userRef, {
+          moduleCompleted: true,
+          moduleProgressSection: moduleSections.length
+        });
+        progressEl.textContent = "Progress: 100%";
+        window.location.href = 'upload.html';
+      } else {
+        // Save progress and load next section
+        await updateDoc(userRef, { moduleProgressSection: currentSection });
+        loadSection();
+      }
+    });
+  </script>
 </body>
 </html>

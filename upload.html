@@ -1,7 +1,8 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Waste Image</title>
   <link rel="stylesheet" href="upload.css">
   <link rel="stylesheet" href="styles.css">
@@ -9,9 +10,11 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="nav-logo">  <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
-    Him Village EPrahari
-  </a></div>
+    <div class="nav-logo">
+      <a href="https://himvillageprahari.org" target="_blank" rel="noopener noreferrer">
+        Him Village EPrahari
+      </a>
+    </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
@@ -20,58 +23,43 @@
   </nav>
 
   <div class="main-content">
-
-
     <section class="hero-section">
+      <h2>Capture / Upload Waste Image</h2>
+      <div id="userStatus">Please login from Home page</div>
 
-    <h2>Capture / Upload Waste Image</h2>
+      <label>
+        Choose category:
+        <select id="category">
+          <option value="">--select--</option>
+          <option value="plastic">Plastic</option>
+          <option value="metal">Metal</option>
+          <option value="glass">Glass</option>
+          <option value="paper">Paper</option>
+          <option value="cardboard">Cardboard</option>
+          <option value="trash">Trash</option>
+        </select>
+      </label>
 
-    <div id="userStatus">Please login from Home page</div>
+      <div id="inputContainer"></div>
 
-    <label>
-      Choose category:
-      <select id="category">
-        <option value="">--select--</option>
-        <option value="plastic">Plastic</option>
-        <option value="metal">Metal</option>
-        <option value="glass">Glass</option>
-        <option value="paper">Paper</option>
-        <option value="cardboard">Cardboard</option>
-        <option value="trash">Trash</option>
-      </select>
-    </label>
+      <button id="uploadBtn">Upload</button>
 
-    <div id="inputContainer">
-      <!-- Will dynamically show either camera or file input -->
-    </div>
+      <div id="status"></div>
+      <progress id="progressBar" value="0" max="100" style="display:none;"></progress>
 
-    <button id="uploadBtn">Upload</button>
+      <h3>Your Progress:</h3>
+      <div id="progressDisplay">Loading...</div>
 
-    <div id="status"></div>
-    <progress id="progressBar" value="0" max="100" style="display:none;"></progress>
-
-    <h3>Your Progress:</h3>
-    <div id="progressDisplay">Loading...</div>
-
-
+      <i>Note: The images and state location information you provide are used only for technical research and improving our digital waste awareness initiatives.</i>
     </section>
-    <i>Note: The images and state location information you provided are used only for technical research and improving our digital waste awareness initiatives.</i>
-
-
   </div>
 
 <script src="env.js"></script>
-<script type="module" src="firebase-config.js"></script>
 <script type="module">
-import {
-  auth, onAuthStateChanged, db, collection, addDoc, serverTimestamp,
-  doc, updateDoc, increment, getDoc
-} from './firebase-config.js';
+import { auth, onAuthStateChanged, db } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, increment, getDoc } from 'firebase/firestore';
 
-
-import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
-
-
+// DOM Elements
 const userStatus = document.getElementById('userStatus');
 const uploadBtn = document.getElementById('uploadBtn');
 const inputContainer = document.getElementById('inputContainer');
@@ -82,9 +70,9 @@ const progressDisplay = document.getElementById('progressDisplay');
 
 let currentUser = null;
 let selectedFile = null;
-let userState = ''; // Geo state
+let userState = '';
 
-// ---------------- DEVICE DETECTION ----------------
+// ---------------- DEVICE INPUT ----------------
 function isMobile() {
   return /Mobi|Android/i.test(navigator.userAgent);
 }
@@ -105,12 +93,16 @@ async function getState() {
   if (!navigator.geolocation) return '';
   return new Promise(resolve => {
     navigator.geolocation.getCurrentPosition(async pos => {
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-      const data = await res.json();
-      resolve(data.address.state || '');
-    }, err => resolve(''));
+      try {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+        const data = await res.json();
+        resolve(data.address?.state || '');
+      } catch {
+        resolve('');
+      }
+    }, () => resolve(''));
   });
 }
 
@@ -129,19 +121,20 @@ async function updateProgressDisplay() {
   const categories = ["plastic","metal","glass","paper","cardboard","trash"];
   let html = "";
   let allUploadsDone = true;
+
   categories.forEach(cat => {
     const count = data.progress?.[cat] || 0;
-    html += `${cat.charAt(0).toUpperCase() + cat.slice(1)}: ${count}/2 <br>`;
+    html += `${cat.charAt(0).toUpperCase() + cat.slice(1)}: ${count}/2<br>`;
     if (count < 2) allUploadsDone = false;
   });
+
   progressDisplay.innerHTML = html;
 
-  // Show certificate section if both uploads per category & module done
   const moduleDone = data.moduleCompleted || false;
   showCertificateIfEligible(allUploadsDone, moduleDone);
 }
 
-// ---------------- SHOW CERTIFICATE IF ELIGIBLE ----------------
+// ---------------- CERTIFICATE ----------------
 function showCertificateIfEligible(uploadsDone, moduleDone) {
   let existing = document.getElementById('certificateSection');
   if (uploadsDone && moduleDone) {
@@ -151,19 +144,19 @@ function showCertificateIfEligible(uploadsDone, moduleDone) {
       certDiv.style.marginTop = '20px';
       certDiv.innerHTML = `
         <h3>Congratulations! 🎉 You are eligible for your certificate!</h3>
-        <button id="getCertificateBtn" class="button">Get Certificate</button>
+        <button id="getCertificateBtn">Get Certificate</button>
       `;
       progressDisplay.parentNode.appendChild(certDiv);
       document.getElementById('getCertificateBtn').addEventListener('click', () => {
         window.location.href = 'certificate.html';
       });
     }
-  } else {
-    if (existing) existing.remove();
+  } else if (existing) {
+    existing.remove();
   }
 }
 
-// ---------------- AUTH STATE ----------------
+// ---------------- AUTH ----------------
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   if (user) {
@@ -177,14 +170,18 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ---------------- IMAGE RESIZE ----------------
-function resizeImage(file, maxWidth = 512, maxHeight = 512, quality = 0.8) {
+function resizeImage(file, maxWidth=512, maxHeight=512, quality=0.8) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      let width = img.width;
-      let height = img.height;
-      if (width > height) { if (width > maxWidth) { height = Math.round(height * maxWidth / width); width = maxWidth; } }
-      else { if (height > maxHeight) { width = Math.round(width * maxHeight / height); height = maxHeight; } }
+      let width = img.width, height = img.height;
+      if (width > height && width > maxWidth) {
+        height = Math.round(height * maxWidth / width);
+        width = maxWidth;
+      } else if (height > maxHeight) {
+        width = Math.round(width * maxHeight / height);
+        height = maxHeight;
+      }
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
@@ -207,13 +204,13 @@ async function uploadToCloudinary(fileBlob, category) {
 
   progressBar.style.display = 'block';
   progressBar.value = 0;
-  statusDiv.innerHTML = 'Uploading<span class="dots">...</span>';
+  statusDiv.textContent = 'Uploading...';
 
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
-    xhr.upload.onprogress = event => {
-      if (event.lengthComputable) progressBar.value = (event.loaded/event.total)*100;
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) progressBar.value = (e.loaded / e.total) * 100;
     };
     xhr.onload = () => {
       const data = JSON.parse(xhr.responseText);
@@ -255,6 +252,7 @@ uploadBtn.addEventListener('click', async () => {
     inputContainer.querySelector('input').value = '';
     progressBar.style.display = 'none';
     await updateProgressDisplay();
+
   } catch(err) {
     console.error(err);
     statusDiv.textContent = 'Error: ' + err.message;

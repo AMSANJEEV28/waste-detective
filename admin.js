@@ -1,112 +1,98 @@
-import { auth, GoogleAuthProvider, signInWithPopup } from './firebase-config.js';
+// admin.js
+import { auth, db, onAuthStateChanged } from './firebase-config.js';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+// Elements
+const adminMain = document.getElementById("adminMain");
+const totalParticipantsEl = document.getElementById("totalParticipants");
+const categoryCounts = {
+  Plastic: document.getElementById("PlasticCount"),
+  Metal: document.getElementById("MetalCount"),
+  Glass: document.getElementById("GlassCount"),
+  Paper: document.getElementById("PaperCount"),
+  Cardboard: document.getElementById("CardboardCount"),
+  Trash: document.getElementById("TrashCount")
 };
+const exportCSVBtn = document.getElementById("exportCSV");
+const exportJSONBtn = document.getElementById("exportJSON");
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+// ✅ List of admin emails
+const ADMIN_EMAILS = ["admin@himvillageprahari.com", "amsanjeev28@gmail.com"];
 
-// ----- 2️⃣ Admin Emails -----
-const ADMIN_EMAILS = ["admin@himvillageprahari", "amsanjeev28@gmail.com"];
-
-// ----- 3️⃣ Auth Check -----
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    if (ADMIN_EMAILS.includes(user.email)) {
-      // User is admin, load dashboard
-      loadAdminDashboard();
-    } else {
-      alert("Access Denied: You are not an admin.");
-      window.location.href = "/"; // redirect to home
-    }
-  } else {
-    window.location.href = "/login"; // redirect to login
-  }
-});
-
-// ----- 4️⃣ Load Admin Dashboard -----
-async function loadAdminDashboard() {
+// ---------------------
+// LOAD STATS
+// ---------------------
+async function loadStats() {
   try {
-    const usersSnapshot = await db.collection("users").get();
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    totalParticipantsEl.textContent = usersSnapshot.size;
 
-    // Total participants
-    document.getElementById("totalParticipants").innerText = usersSnapshot.size;
+    const counts = { Plastic:0, Metal:0, Glass:0, Paper:0, Cardboard:0, Trash:0 };
 
-    // Initialize category counts
-    const categoryCounts = {
-      Plastic: 0,
-      Metal: 0,
-      Glass: 0,
-      Paper: 0,
-      Cardboard: 0,
-      Trash: 0
-    };
-
-    // Sum uploads from all users
-    usersSnapshot.forEach((doc) => {
-      const data = doc.data();
-      const progress = data.progress || {};
-
-      categoryCounts.Plastic += progress.plastic || 0;
-      categoryCounts.Metal += progress.metal || 0;
-      categoryCounts.Glass += progress.glass || 0;
-      categoryCounts.Paper += progress.paper || 0;
-      categoryCounts.Cardboard += progress.cardboard || 0;
-      categoryCounts.Trash += progress.trash || 0;
+    usersSnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      if (data.progress) {
+        counts.Plastic += data.progress.plastic || 0;
+        counts.Metal += data.progress.metal || 0;
+        counts.Glass += data.progress.glass || 0;
+        counts.Paper += data.progress.paper || 0;
+        counts.Cardboard += data.progress.cardboard || 0;
+        counts.Trash += data.progress.trash || 0;
+      }
     });
 
-    // Update HTML
-    for (let cat in categoryCounts) {
-      document.getElementById(`${cat}Count`).innerText = categoryCounts[cat];
+    // Update DOM
+    for (const key in counts) {
+      categoryCounts[key].textContent = counts[key];
     }
 
-  } catch (error) {
-    console.error("Error loading dashboard:", error);
+  } catch (err) {
+    console.error("Error loading stats:", err);
+    alert("Failed to load admin stats. Check console.");
   }
 }
 
-
-// ----- 5️⃣ Export JSON -----
-document.getElementById("exportJSON").addEventListener("click", async () => {
-  const uploadsSnapshot = await db.collection("uploads").get();
-  const uploadsData = uploadsSnapshot.docs.map(doc => doc.data());
-
-  const blob = new Blob([JSON.stringify(uploadsData, null, 2)], { type: "application/json" });
+// ---------------------
+// EXPORT HANDLERS
+// ---------------------
+exportCSVBtn.addEventListener("click", async () => {
+  const snapshot = await getDocs(collection(db, "uploads"));
+  const uploadsData = snapshot.docs.map(doc => doc.data());
+  let csv = "userId,category,imageURL,timestamp\n";
+  uploadsData.forEach(r => {
+    csv += `${r.userId},${r.category},${r.imageURL},${r.timestamp}\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "uploads.json";
-  a.click();
+  a.href = url; a.download = "uploads.csv"; a.click();
   URL.revokeObjectURL(url);
 });
 
-// ----- 6️⃣ Export CSV -----
-document.getElementById("exportCSV").addEventListener("click", async () => {
-  const uploadsSnapshot = await db.collection("uploads").get();
-  const uploadsData = uploadsSnapshot.docs.map(doc => doc.data());
-
-  let csv = "userId,category,imageURL,timestamp\n";
-  uploadsData.forEach(row => {
-    csv += `${row.userId},${row.category},${row.imageURL},${row.timestamp}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
+exportJSONBtn.addEventListener("click", async () => {
+  const snapshot = await getDocs(collection(db, "uploads"));
+  const uploadsData = snapshot.docs.map(doc => doc.data());
+  const blob = new Blob([JSON.stringify(uploadsData, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
-
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "uploads.csv";
-  a.click();
+  a.href = url; a.download = "uploads.json"; a.click();
   URL.revokeObjectURL(url);
+});
+
+// ---------------------
+// ADMIN AUTH CHECK
+// ---------------------
+onAuthStateChanged(auth, async user => {
+  if (!user) return window.location.href = "index.html";
+
+  if (!ADMIN_EMAILS.includes(user.email)) {
+    alert("Access Denied: You are not an admin.");
+    return window.location.href = "index.html";
+  }
+
+  // Show admin content
+  adminMain.style.display = "block";
+
+  // Load stats
+  loadStats();
 });

@@ -1,12 +1,15 @@
 // firebase-config.js
 // ✅ Firebase modular SDK (v9+), works with Vite + Netlify environment variables
 
+// Make sure you installed Firebase in your project:
+// npm install firebase
+
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, increment } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// Load config from Netlify environment variables
+// ✅ Load config from Netlify environment variables
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -17,20 +20,20 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("Firebase config loaded:", firebaseConfig);
-
-// Initialize Firebase
+// ✅ Initialize Firebase (only once)
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+const provider = new GoogleAuthProvider();
 
+// ✅ Export everything you might need
 export {
   app,
   auth,
+  provider,
   db,
   storage,
-  GoogleAuthProvider,
   signInWithPopup,
   signOut,
   onAuthStateChanged,

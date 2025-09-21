@@ -86,6 +86,7 @@ joinBtn.addEventListener('click', () => {
 // ---------------------
 const totalModuleSections = 5; // total sections in learning module
 
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     console.log("User is signed in:", user);
@@ -109,27 +110,54 @@ onAuthStateChanged(auth, async (user) => {
       const modulePercent = data.moduleCompleted
         ? 100
         : Math.round(((data.moduleProgressSection || 0) / totalModuleSections) * 100);
-
       moduleProgressEl.textContent = `${modulePercent}%`;
 
       // ---------------------
       // ASSIGNMENT PROGRESS
       // ---------------------
-      const assignmentPercent = data.totalPoints || 0;
+      const categories = ["plastic","metal","glass","paper","cardboard","trash"];
+      const totalUploadsRequired = categories.length * 2; // 2 per category
+      const userTotalUploads = categories.reduce((sum, cat) => sum + (data.progress?.[cat] || 0), 0);
+      const assignmentPercent = Math.min(100, Math.round((userTotalUploads / totalUploadsRequired) * 100));
       userPointsEl.textContent = `${assignmentPercent}%`;
 
       console.log("Module Progress:", modulePercent + "%");
       console.log("Assignment Progress:", assignmentPercent + "%");
 
       // ---------------------
-      // BUTTON VISIBILITY
+      // BUTTONS AND CERTIFICATE LOGIC
       // ---------------------
-      if (data.moduleCompleted) {
+      const existingCert = document.getElementById('certificateSection');
+
+      if (data.moduleCompleted && userTotalUploads >= totalUploadsRequired) {
+        // Hide module & assignment buttons
+        learnModuleBtn.style.display = 'none';
+        joinBtn.style.display = 'none';
+
+        // Show congratulations & certificate button
+        if (!existingCert) {
+          const certDiv = document.createElement('div');
+          certDiv.id = 'certificateSection';
+          certDiv.style.marginTop = '20px';
+          certDiv.innerHTML = `
+            <h3>🎉 Congratulations! You have completed all modules and assignments!</h3>
+            <button id="getCertificateBtn" class="hv-btn">Get Certificate</button>
+          `;
+          profileDiv.appendChild(certDiv);
+          document.getElementById('getCertificateBtn').addEventListener('click', () => {
+            window.location.href = 'certificate.html';
+          });
+        }
+      } else if (data.moduleCompleted) {
+        // Module done but assignments pending
         learnModuleBtn.style.display = 'none';
         joinBtn.style.display = 'inline-block';
+        if (existingCert) existingCert.remove();
       } else {
+        // Module not completed
         learnModuleBtn.style.display = 'inline-block';
         joinBtn.style.display = 'none';
+        if (existingCert) existingCert.remove();
       }
 
     } else {
@@ -152,6 +180,8 @@ onAuthStateChanged(auth, async (user) => {
       userPointsEl.textContent = `0%`;
       learnModuleBtn.style.display = 'inline-block';
       joinBtn.style.display = 'none';
+      const existingCert = document.getElementById('certificateSection');
+      if (existingCert) existingCert.remove();
     }
 
   } else {
@@ -164,5 +194,7 @@ onAuthStateChanged(auth, async (user) => {
     joinBtn.style.display = 'none';
     moduleProgressEl.textContent = '0%';
     userPointsEl.textContent = '0%';
+    const existingCert = document.getElementById('certificateSection');
+    if (existingCert) existingCert.remove();
   }
 });
